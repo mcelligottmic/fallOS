@@ -13,7 +13,7 @@
  * Port to TypeScript by Bob Nisco.
  * ----------------- */
 
-module TSOS {
+module MOS {
 
     export class CanvasTextFunctions {
 

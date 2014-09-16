@@ -1,5 +1,5 @@
-var TSOS;
-(function (TSOS) {
+var MOS;
+(function (MOS) {
     var ShellCommand = (function () {
         function ShellCommand(func, command, description) {
             if (typeof command === "undefined") { command = ""; }
@@ -10,5 +10,5 @@ var TSOS;
         }
         return ShellCommand;
     })();
-    TSOS.ShellCommand = ShellCommand;
-})(TSOS || (TSOS = {}));
+    MOS.ShellCommand = ShellCommand;
+})(MOS || (MOS = {}));

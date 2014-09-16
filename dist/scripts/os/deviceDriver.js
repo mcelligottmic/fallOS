@@ -2,8 +2,8 @@
 DeviceDriver.ts
 The "base class" for all Device Drivers.
 ------------------------------ */
-var TSOS;
-(function (TSOS) {
+var MOS;
+(function (MOS) {
     var DeviceDriver = (function () {
         function DeviceDriver(driverEntry, isr) {
             if (typeof driverEntry === "undefined") { driverEntry = null; }
@@ -16,5 +16,5 @@ var TSOS;
         }
         return DeviceDriver;
     })();
-    TSOS.DeviceDriver = DeviceDriver;
-})(TSOS || (TSOS = {}));
+    MOS.DeviceDriver = DeviceDriver;
+})(MOS || (MOS = {}));

@@ -23,7 +23,7 @@
 //
 // Control Services
 //
-module TSOS {
+module MOS {
 
     export class Control {
 

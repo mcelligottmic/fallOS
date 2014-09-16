@@ -10,7 +10,7 @@
 
 // TODO: Write a base class / prototype for system services and let Shell inherit from it.
 
-module TSOS {
+module MOS {
     export class Shell {
         // Properties
         public promptStr = ">";
@@ -73,6 +73,12 @@ module TSOS {
             sc = new ShellCommand(this.shellPrompt,
                                   "prompt",
                                   "<string> - Sets the prompt.");
+            this.commandList[this.commandList.length] = sc;
+			
+			// date
+            sc = new ShellCommand(this.shellDate,
+                                  "date",
+                                  "- Displays the current date and time");
             this.commandList[this.commandList.length] = sc;
 
             // processes - list the running processes and their IDs
@@ -277,6 +283,10 @@ module TSOS {
             } else {
                 _StdOut.putText("Usage: prompt <string>  Please supply a string.");
             }
+        }
+		
+		public shellDate(args) {
+            _StdOut.putText("It is " + Date().toLocaleDateString() );
         }
 
     }
