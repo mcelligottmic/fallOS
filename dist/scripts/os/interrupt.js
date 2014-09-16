@@ -1,8 +1,8 @@
 /* ------------
 Interrupt.ts
 ------------ */
-var MOS;
-(function (MOS) {
+var TSOS;
+(function (TSOS) {
     var Interrupt = (function () {
         function Interrupt(irq, params) {
             this.irq = irq;
@@ -10,5 +10,5 @@ var MOS;
         }
         return Interrupt;
     })();
-    MOS.Interrupt = Interrupt;
-})(MOS || (MOS = {}));
+    TSOS.Interrupt = Interrupt;
+})(TSOS || (TSOS = {}));

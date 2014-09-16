@@ -4,7 +4,7 @@
    Utility functions.
    -------- */
 
-module MOS {
+module TSOS {
 
     export class Utils {
 

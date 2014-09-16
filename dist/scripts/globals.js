@@ -63,5 +63,5 @@ var _GLaDOS = null;
 var Glados = null;
 
 var onDocumentLoad = function () {
-    MOS.Control.hostInit();
+    TSOS.Control.hostInit();
 };

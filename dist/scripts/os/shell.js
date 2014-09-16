@@ -6,8 +6,8 @@ Shell.ts
 The OS Shell - The "command line interface" (CLI) for the console.
 ------------ */
 // TODO: Write a base class / prototype for system services and let Shell inherit from it.
-var MOS;
-(function (MOS) {
+var TSOS;
+(function (TSOS) {
     var Shell = (function () {
         function Shell() {
             // Properties
@@ -22,39 +22,39 @@ var MOS;
             //
             // Load the command list.
             // ver
-            sc = new MOS.ShellCommand(this.shellVer, "ver", "- Displays the current version data.");
+            sc = new TSOS.ShellCommand(this.shellVer, "ver", "- Displays the current version data.");
             this.commandList[this.commandList.length] = sc;
 
             // help
-            sc = new MOS.ShellCommand(this.shellHelp, "help", "- This is the help command. Seek help.");
+            sc = new TSOS.ShellCommand(this.shellHelp, "help", "- This is the help command. Seek help.");
             this.commandList[this.commandList.length] = sc;
 
             // shutdown
-            sc = new MOS.ShellCommand(this.shellShutdown, "shutdown", "- Shuts down the virtual OS but leaves the underlying hardware simulation running.");
+            sc = new TSOS.ShellCommand(this.shellShutdown, "shutdown", "- Shuts down the virtual OS but leaves the underlying hardware simulation running.");
             this.commandList[this.commandList.length] = sc;
 
             // cls
-            sc = new MOS.ShellCommand(this.shellCls, "cls", "- Clears the screen and resets the cursor position.");
+            sc = new TSOS.ShellCommand(this.shellCls, "cls", "- Clears the screen and resets the cursor position.");
             this.commandList[this.commandList.length] = sc;
 
             // man <topic>
-            sc = new MOS.ShellCommand(this.shellMan, "man", "<topic> - Displays the MANual page for <topic>.");
+            sc = new TSOS.ShellCommand(this.shellMan, "man", "<topic> - Displays the MANual page for <topic>.");
             this.commandList[this.commandList.length] = sc;
 
             // trace <on | off>
-            sc = new MOS.ShellCommand(this.shellTrace, "trace", "<on | off> - Turns the OS trace on or off.");
+            sc = new TSOS.ShellCommand(this.shellTrace, "trace", "<on | off> - Turns the OS trace on or off.");
             this.commandList[this.commandList.length] = sc;
 
             // rot13 <string>
-            sc = new MOS.ShellCommand(this.shellRot13, "rot13", "<string> - Does rot13 obfuscation on <string>.");
+            sc = new TSOS.ShellCommand(this.shellRot13, "rot13", "<string> - Does rot13 obfuscation on <string>.");
             this.commandList[this.commandList.length] = sc;
 
             // prompt <string>
-            sc = new MOS.ShellCommand(this.shellPrompt, "prompt", "<string> - Sets the prompt.");
+            sc = new TSOS.ShellCommand(this.shellPrompt, "prompt", "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
 
             // date
-            sc = new MOS.ShellCommand(this.shellDate, "date", "- Displays the current date and time");
+            sc = new TSOS.ShellCommand(this.shellDate, "date", "- Displays the current date and time");
             this.commandList[this.commandList.length] = sc;
 
             // processes - list the running processes and their IDs
@@ -74,7 +74,7 @@ var MOS;
             //
             // Parse the input...
             //
-            var userCommand = new MOS.UserCommand();
+            var userCommand = new TSOS.UserCommand();
             userCommand = this.parseInput(buffer);
 
             // ... and assign the command and args to local variables.
@@ -101,7 +101,7 @@ var MOS;
                 this.execute(fn, args);
             } else {
                 // It's not found, so check for curses and apologies before declaring the command invalid.
-                if (this.curses.indexOf("[" + MOS.Utils.rot13(cmd) + "]") >= 0) {
+                if (this.curses.indexOf("[" + TSOS.Utils.rot13(cmd) + "]") >= 0) {
                     this.execute(this.shellCurse);
                 } else if (this.apologies.indexOf("[" + cmd + "]") >= 0) {
                     this.execute(this.shellApology);
@@ -129,10 +129,10 @@ var MOS;
         };
 
         Shell.prototype.parseInput = function (buffer) {
-            var retVal = new MOS.UserCommand();
+            var retVal = new TSOS.UserCommand();
 
             // 1. Remove leading and trailing spaces.
-            buffer = MOS.Utils.trim(buffer);
+            buffer = TSOS.Utils.trim(buffer);
 
             // 2. Lower-case it.
             buffer = buffer.toLowerCase();
@@ -144,13 +144,13 @@ var MOS;
             var cmd = tempList.shift();
 
             // 4.1 Remove any left-over spaces.
-            cmd = MOS.Utils.trim(cmd);
+            cmd = TSOS.Utils.trim(cmd);
 
             // 4.2 Record it in the return value.
             retVal.command = cmd;
 
             for (var i in tempList) {
-                var arg = MOS.Utils.trim(tempList[i]);
+                var arg = TSOS.Utils.trim(tempList[i]);
                 if (arg != "") {
                     retVal.args[retVal.args.length] = tempList[i];
                 }
@@ -254,7 +254,7 @@ var MOS;
         Shell.prototype.shellRot13 = function (args) {
             if (args.length > 0) {
                 // Requires Utils.ts for rot13() function.
-                _StdOut.putText(args.join(' ') + " = '" + MOS.Utils.rot13(args.join(' ')) + "'");
+                _StdOut.putText(args.join(' ') + " = '" + TSOS.Utils.rot13(args.join(' ')) + "'");
             } else {
                 _StdOut.putText("Usage: rot13 <string>  Please supply a string.");
             }
@@ -269,9 +269,10 @@ var MOS;
         };
 
         Shell.prototype.shellDate = function (args) {
-            _StdOut.putText("It is ");
+            var date = new Date();
+            _StdOut.putText("It is " + date.toDateString());
         };
         return Shell;
     })();
-    MOS.Shell = Shell;
-})(MOS || (MOS = {}));
+    TSOS.Shell = Shell;
+})(TSOS || (TSOS = {}));

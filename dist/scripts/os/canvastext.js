@@ -12,8 +12,8 @@
 *
 * Port to TypeScript by Bob Nisco.
 * ----------------- */
-var MOS;
-(function (MOS) {
+var TSOS;
+(function (TSOS) {
     var CanvasTextFunctions = (function () {
         function CanvasTextFunctions() {
         }
@@ -201,5 +201,5 @@ var MOS;
         };
         return CanvasTextFunctions;
     })();
-    MOS.CanvasTextFunctions = CanvasTextFunctions;
-})(MOS || (MOS = {}));
+    TSOS.CanvasTextFunctions = CanvasTextFunctions;
+})(TSOS || (TSOS = {}));

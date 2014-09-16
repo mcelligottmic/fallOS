@@ -25,7 +25,7 @@ var KEYBOARD_IRQ: number = 1;
 //
 // Global Variables
 //
-var _CPU: MOS.Cpu;  // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class.
+var _CPU: TSOS.Cpu;  // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class.
 
 var _OSclock: number = 0;  // Page 23.
 
@@ -41,7 +41,7 @@ var _FontHeightMargin = 4;              // Additional space added to font size w
 var _Trace: boolean = true;  // Default the OS trace to be on.
 
 // The OS Kernel and its queues.
-var _Kernel: MOS.Kernel;
+var _Kernel: TSOS.Kernel;
 var _KernelInterruptQueue = null;
 var _KernelBuffers: any[] = null;
 var _KernelInputQueue = null;
@@ -51,8 +51,8 @@ var _StdIn  = null;
 var _StdOut = null;
 
 // UI
-var _Console: MOS.Console;
-var _OsShell: MOS.Shell;
+var _Console: TSOS.Console;
+var _OsShell: TSOS.Shell;
 
 // At least this OS is not trying to kill you. (Yet.)
 var _SarcasticMode: boolean = false;
@@ -67,5 +67,5 @@ var _GLaDOS: any = null;
 var Glados: any = null;
 
 var onDocumentLoad = function() {
-	MOS.Control.hostInit();
+	TSOS.Control.hostInit();
 };

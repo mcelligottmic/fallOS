@@ -2,8 +2,8 @@
 Utils.ts
 Utility functions.
 -------- */
-var MOS;
-(function (MOS) {
+var TSOS;
+(function (TSOS) {
     var Utils = (function () {
         function Utils() {
         }
@@ -44,5 +44,5 @@ var MOS;
         };
         return Utils;
     })();
-    MOS.Utils = Utils;
-})(MOS || (MOS = {}));
+    TSOS.Utils = Utils;
+})(TSOS || (TSOS = {}));

@@ -10,7 +10,7 @@
 
 // TODO: Write a base class / prototype for system services and let Shell inherit from it.
 
-module MOS {
+module TSOS {
     export class Shell {
         // Properties
         public promptStr = ">";
@@ -286,7 +286,8 @@ module MOS {
         }
 		
 		public shellDate(args) {
-            _StdOut.putText("It is ");
+			var date = new Date();
+            _StdOut.putText("It is " + date.toDateString());
         }
 
     }

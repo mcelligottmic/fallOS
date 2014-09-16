@@ -5,8 +5,8 @@ Requires globals.ts
 The OS Console - stdIn and stdOut by default.
 Note: This is not the Shell.  The Shell is the "command line interface" (CLI) or interpreter for this console.
 ------------ */
-var MOS;
-(function (MOS) {
+var TSOS;
+(function (TSOS) {
     var Console = (function () {
         function Console(currentFont, currentFontSize, currentXPosition, currentYPosition, buffer) {
             if (typeof currentFont === "undefined") { currentFont = _DefaultFontFamily; }
@@ -89,5 +89,5 @@ var MOS;
         };
         return Console;
     })();
-    MOS.Console = Console;
-})(MOS || (MOS = {}));
+    TSOS.Console = Console;
+})(TSOS || (TSOS = {}));
