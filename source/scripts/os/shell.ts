@@ -286,7 +286,7 @@ module MOS {
         }
 		
 		public shellDate(args) {
-            _StdOut.putText("It is " + Date().toLocaleDateString() );
+            _StdOut.putText("It is ");
         }
 
     }

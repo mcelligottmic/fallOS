@@ -269,7 +269,7 @@ var MOS;
         };
 
         Shell.prototype.shellDate = function (args) {
-            _StdOut.putText("It is " + Date().toLocaleDateString());
+            _StdOut.putText("It is ");
         };
         return Shell;
     })();
