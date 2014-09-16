@@ -286,8 +286,8 @@ module TSOS {
         }
 		
 		public shellDate(args) {
-			var date = new Date();
-            _StdOut.putText("It is " + date.toDateString());
+			var d = new Date();
+            _StdOut.putText("The time is " + d.getHours() + ":" + d.getMinutes() + "and today's date is " + d.getDay() + d.getMonth() + d.getFullYear() );
         }
 
     }
