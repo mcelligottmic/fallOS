@@ -80,6 +80,18 @@ module TSOS {
                                   "date",
                                   "- Displays the current date and time");
             this.commandList[this.commandList.length] = sc;
+			
+			// whereami
+            sc = new ShellCommand(this.shellWhereAmI,
+                                  "whereami",
+                                  "- Displays your current location.");
+            this.commandList[this.commandList.length] = sc;
+			
+			// rules
+            sc = new ShellCommand(this.shellRules,
+                                  "rules",
+                                  "- rules for a world with zombies");
+            this.commandList[this.commandList.length] = sc;
 
             // processes - list the running processes and their IDs
             // kill <id> - kills the specified process id.
@@ -287,7 +299,40 @@ module TSOS {
 		
 		public shellDate(args) {
 			var d = new Date();
-            _StdOut.putText("Today's date is " + (d.getMonth() + 1)+ "/" + d.getDate() + "/" + d.getFullYear() + " and the time is " + d.getHours() + ":" + d.getMinutes() );
+            _StdOut.putText("Today's date is " + (d.getMonth() + 1)+ "/" + d.getDate() + "/" + d.getFullYear() + 
+				" and the time is " + d.getHours() + ":" + d.getMinutes() );
+        }
+		
+		public shellWhereAmI(args) {
+            _StdOut.putText("Your at a computer...");
+        }
+		
+		public shellRules(args) {
+			var list:string[] = ["#1 Cardio","#2 Double Tap","#3 Beware of Bathrooms","#4 Wear Seat Belts","#5 No Attachments",
+								"#18 Limber up","#22 When in doubt Know your way out","#31 Check the back seat",
+								"#32Enjoy the little things"]; 
+            var date = new Date();
+			var time = (date.getMilliseconds());
+			if (time < 100) {
+                _StdOut.putText(list[0]);
+			} else if (time < 200) {
+				_StdOut.putText(list[1]);
+			} else if (time < 300) {
+				_StdOut.putText(list[2]);
+			} else if (time < 400) {
+				_StdOut.putText(list[3]);
+			} else if (time < 500) {
+				_StdOut.putText(list[4]);
+			} else if (time < 600) {
+				_StdOut.putText(list[5]);
+			} else if (time < 700) {
+				_StdOut.putText(list[6]);
+			} else if (time < 800) {
+				_StdOut.putText(list[7]);
+			} else {
+				_StdOut.putText(list[8]);
+			}
+				
         }
 
     }
