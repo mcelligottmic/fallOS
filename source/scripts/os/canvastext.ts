@@ -16,7 +16,7 @@
 module TSOS {
 
     export class CanvasTextFunctions {
-
+	
         public static letters = {
             ' ': { width: 16, points: [] },
             '!': { width: 10, points: [[5,21],[5,7],[-1,-1],[5,2],[4,1],[5,0],[6,1],[5,2]] },
@@ -146,6 +146,18 @@ module TSOS {
             var len = str.length;
             var mag = size / 25.0;
 
+			var maxWidth = ctx.width;
+			var maxHeight = ctx.height;
+			var currX = x;
+			var currY = y;
+			
+			//lazy expansion
+			
+			//if (ctx.height - currY < 300) {
+				//ctx.save();
+				//ctx.height += 300; 
+			//}
+			
             ctx.save();
             ctx.lineCap = "round";
             ctx.lineWidth = 2.0 * mag;

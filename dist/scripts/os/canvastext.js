@@ -47,6 +47,16 @@ var TSOS;
             var len = str.length;
             var mag = size / 25.0;
 
+            var maxWidth = ctx.width;
+            var maxHeight = ctx.height;
+            var currX = x;
+            var currY = y;
+
+            //lazy expansion
+            //if (ctx.height - currY < 300) {
+            //ctx.save();
+            //ctx.height += 300;
+            //}
             ctx.save();
             ctx.lineCap = "round";
             ctx.lineWidth = 2.0 * mag;

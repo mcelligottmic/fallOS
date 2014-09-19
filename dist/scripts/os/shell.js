@@ -65,6 +65,10 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellRules, "rules", "- rules for a world with zombies");
             this.commandList[this.commandList.length] = sc;
 
+            // status <string>
+            sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Displays <string> under the status bar.");
+            this.commandList[this.commandList.length] = sc;
+
             // processes - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -310,6 +314,18 @@ var TSOS;
                 _StdOut.putText(list[7]);
             } else {
                 _StdOut.putText(list[8]);
+            }
+        };
+
+        Shell.prototype.shellStatus = function (args) {
+            if (args.length > 0) {
+                var newString = "";
+                for (var i = 0; i < args.length; i++) {
+                    newString = newString + args[i] + " ";
+                }
+                document.getElementById('statusBox').innerHTML = newString;
+            } else {
+                document.getElementById('statusBox').innerHTML = "Usage: status <string>  Please supply a string.";
             }
         };
         return Shell;

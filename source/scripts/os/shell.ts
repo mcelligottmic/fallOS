@@ -92,6 +92,12 @@ module TSOS {
                                   "rules",
                                   "- rules for a world with zombies");
             this.commandList[this.commandList.length] = sc;
+			
+			// status <string>
+            sc = new ShellCommand(this.shellStatus,
+                                  "status",
+                                  "<string> - Displays <string> under the status bar.");
+            this.commandList[this.commandList.length] = sc;
 
             // processes - list the running processes and their IDs
             // kill <id> - kills the specified process id.
@@ -333,6 +339,18 @@ module TSOS {
 				_StdOut.putText(list[8]);
 			}
 				
+        }
+		
+		public shellStatus(args) {
+            if (args.length > 0) {
+				var newString: string = "";
+				for(var i = 0; i < args.length; i++){
+					newString = newString + args[i] + " ";
+				}
+                document.getElementById('statusBox').innerHTML = newString;
+            } else {
+                document.getElementById('statusBox').innerHTML = "Usage: status <string>  Please supply a string.";
+            }
         }
 
     }
