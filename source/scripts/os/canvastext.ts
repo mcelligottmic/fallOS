@@ -153,10 +153,10 @@ module TSOS {
 			
 			//lazy expansion
 			
-			//if (ctx.height - currY < 300) {
+			if (ctx.height - currY < 300) {
 				//ctx.save();
-				//ctx.height += 300; 
-			//}
+				//ctx.height = ctx.height + 300; 
+			}
 			
             ctx.save();
             ctx.lineCap = "round";
