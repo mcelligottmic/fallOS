@@ -20,6 +20,15 @@ module TSOS {
                     public buffer = "") {
 
         }
+		
+		//lazy expansion
+		public growCanvas(): void {
+			if ( _Canvas.height - this.currentYPosition < 400) {
+				var temp = _DrawingContext.getImageData(0,0,_Canvas.width, _Canvas.height);
+				_Canvas.height = _Canvas.height + 400;
+				_DrawingContext.putImageData(temp,0,0); 
+			}
+		}
 
         public init(): void {
             this.clearScreen();
@@ -41,7 +50,8 @@ module TSOS {
                 var chr = _KernelInputQueue.dequeue();
                 // Check to see if it's "special" (enter or ctrl-c) or "normal" (anything else that the keyboard device driver gave us).
                 if (chr === String.fromCharCode(13)) { //     Enter key
-                    // The enter key marks the end of a console command, so ...
+                    this.growCanvas();
+					// The enter key marks the end of a console command, so ...
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);
                     // ... and reset our buffer.

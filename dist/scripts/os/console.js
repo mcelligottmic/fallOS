@@ -20,6 +20,15 @@ var TSOS;
             this.currentYPosition = currentYPosition;
             this.buffer = buffer;
         }
+        //lazy expansion
+        Console.prototype.growCanvas = function () {
+            if (_Canvas.height - this.currentYPosition < 400) {
+                var temp = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
+                _Canvas.height = _Canvas.height + 400;
+                _DrawingContext.putImageData(temp, 0, 0);
+            }
+        };
+
         Console.prototype.init = function () {
             this.clearScreen();
             this.resetXY();
@@ -41,6 +50,8 @@ var TSOS;
 
                 // Check to see if it's "special" (enter or ctrl-c) or "normal" (anything else that the keyboard device driver gave us).
                 if (chr === String.fromCharCode(13)) {
+                    this.growCanvas();
+
                     // The enter key marks the end of a console command, so ...
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);

@@ -145,18 +145,6 @@ module TSOS {
             var total = 0;
             var len = str.length;
             var mag = size / 25.0;
-
-			var maxWidth = ctx.width;
-			var maxHeight = ctx.height;
-			var currX = x;
-			var currY = y;
-			
-			//lazy expansion
-			
-			if (ctx.height - currY < 300) {
-				//ctx.save();
-				//ctx.height = ctx.height + 300; 
-			}
 			
             ctx.save();
             ctx.lineCap = "round";
