@@ -22,6 +22,7 @@ var TSOS;
             //properties
             this.historyRecall = [];
             this.currentRecall = 0;
+            this.linesFromCommand = 0;
         }
         //lazy expansion
         Console.prototype.growCanvas = function () {
@@ -29,6 +30,15 @@ var TSOS;
                 var temp = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
                 _Canvas.height = _Canvas.height + 400;
                 _DrawingContext.putImageData(temp, 0, 0);
+            }
+        };
+
+        //line wrap
+        Console.prototype.wrapLine = function (text) {
+            var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
+            if (_Canvas.width <= this.currentXPosition + offset) {
+                _Console.advanceLine();
+                this.linesFromCommand = this.linesFromCommand + 1;
             }
         };
 
@@ -69,6 +79,18 @@ var TSOS;
                     // ... and reset our buffer.
                     this.buffer = "";
                 } else if (chr === String.fromCharCode(8)) {
+                    /*
+                    if ( (this.linesFromCommand != 0) &&
+                    (this.currentXPosition == _DrawingContext.measureText(this.currentFont,
+                    this.currentFontSize, this.buffer.charAt(this.buffer.length-1) ) ) &&
+                    (this.currentYPosition != _DefaultFontSize) ) {
+                    this.currentYPosition -= _DefaultFontSize +
+                    _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
+                    _FontHeightMargin;
+                    this.currentXPosition = _Canvas.width - _DrawingContext.measureText(this.currentFont,
+                    this.currentFontSize, this.buffer.charAt(this.buffer.length-1));
+                    }
+                    */
                     //update the canvas
                     //_DrawingContext.fillStyle="red";
                     _DrawingContext.clearRect(this.currentXPosition - _DrawingContext.measureText(this.currentFont, this.currentFontSize, this.buffer.charAt(this.buffer.length - 1)), this.currentYPosition - 13, _DrawingContext.measureText(this.currentFont, this.currentFontSize, this.buffer.charAt(this.buffer.length - 1)), this.currentFontSize + 5);
@@ -133,6 +155,22 @@ var TSOS;
             // decided to write one function and use the term "text" to connote string or char.
             // UPDATE: Even though we are now working in TypeScript, char and string remain undistinguished.
             if (text !== "") {
+                //if text is too long, cut
+                if (_DrawingContext.measureText(this.currentFont, this.currentFontSize, text) > _Canvas.width) {
+                    var splitted = text.split(" ");
+                    for (var i = 0; i < splitted.length; i++) {
+                        if (_Canvas.width <= this.currentXPosition + _DrawingContext.measureText(this.currentFont, this.currentFontSize, splitted[i])) {
+                            this.advanceLine();
+                        }
+                        this.putText(splitted[i]);
+                        this.putText(" ");
+                    }
+                    text = "          ";
+                }
+
+                //check and see if we have enough room to print, if not newline.
+                this.wrapLine(text);
+
                 // Draw the text at the current X and Y coordinates.
                 _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text);
 
