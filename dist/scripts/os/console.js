@@ -74,8 +74,8 @@ var TSOS;
                         var temp = _OsShell.commandList[i].command.substr(0, this.buffer.length);
                         if (this.buffer === temp) {
                             this.buffer = _OsShell.commandList[i].command;
-                            for (var j = initLength; j < _OsShell.commandList[i].command.length - 1; j++) {
-                                this.putText(_OsShell.commandList[i].command.substr(j, j + 1));
+                            for (var j = initLength; j < _OsShell.commandList[i].command.length; j++) {
+                                this.putText(_OsShell.commandList[i].command.charAt(j));
                             }
                         }
                     }
