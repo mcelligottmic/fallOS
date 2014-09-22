@@ -107,6 +107,14 @@ var TSOS;
             } else if ((keyCode == 32) || (keyCode == 8) || (keyCode == 9) || (keyCode == 13)) {
                 chr = String.fromCharCode(keyCode);
                 _KernelInputQueue.enqueue(chr);
+            } else if ((keyCode == 38) || (keyCode == 40)) {
+                //chr = String.fromCharCode(keyCode + 92);
+                if (keyCode == 38) {
+                    chr = "100";
+                } else if (keyCode == 40) {
+                    chr = "102";
+                }
+                _KernelInputQueue.enqueue(chr);
             }
         };
         return DeviceDriverKeyboard;

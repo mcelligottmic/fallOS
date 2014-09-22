@@ -12,6 +12,10 @@
 module TSOS {
 
     export class Console {
+	
+		//properties
+		public historyRecall = [];
+		public currentRecall = 0;
 
         constructor(public currentFont = _DefaultFontFamily,
                     public currentFontSize = _DefaultFontSize,
@@ -54,6 +58,12 @@ module TSOS {
 					// The enter key marks the end of a console command, so ...
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);
+					//store the line for later use
+					this.historyRecall.push(this.buffer);
+					this.currentRecall = this.currentRecall+1;
+					if (this.historyRecall.length === 1) {
+						this.currentRecall = this.currentRecall - 1;
+					}
                     // ... and reset our buffer.
                     this.buffer = "";
                 } else if(chr === String.fromCharCode(8)) { //     Backspace
@@ -83,6 +93,34 @@ module TSOS {
 							}
 						}
 					}
+				//used 130 and 132 as the up and down arrows have no ascii values and these values are not likely to be used.
+				} else if( chr === "100" || chr === "102" ) { //     up and down arrows
+					//clear line
+					_DrawingContext.clearRect(13, 
+												this.currentYPosition - 13,
+												500, 
+												this.currentFontSize + 5);
+					this.currentXPosition = 13;
+					if (chr === "100") {
+						if (this.currentRecall != 0) {
+							this.buffer = this.historyRecall[this.currentRecall];
+							this.currentRecall = this.currentRecall - 1;
+						} else {
+							this.buffer = this.historyRecall[this.currentRecall];
+						}
+					} else {
+						if (this.currentRecall != this.historyRecall.length - 1) {
+							this.buffer = this.historyRecall[this.currentRecall];
+							this.currentRecall = this.currentRecall + 1;
+						} else {
+							this.buffer = this.historyRecall[this.currentRecall];
+						}
+					}
+					//buffer is set, need to update the canvas
+					for (var j = 0; j < this.buffer.length; j++) {
+						this.putText(this.buffer.charAt(j));
+					}
+					
 				} else {
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...

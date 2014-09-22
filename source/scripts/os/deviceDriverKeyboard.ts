@@ -120,7 +120,16 @@ module TSOS {
                         (keyCode == 13)) {                       // enter
                 chr = String.fromCharCode(keyCode);
                 _KernelInputQueue.enqueue(chr);
-            }
+            } else if ( (keyCode == 38)                     ||   // up arrow
+						(keyCode == 40)) {                       // down arrow
+                //chr = String.fromCharCode(keyCode + 92);
+                if (keyCode == 38) {
+					chr = "100";
+				} else if (keyCode == 40) {
+					chr = "102";
+				}
+				_KernelInputQueue.enqueue(chr);
+			}
         }
     }
 }

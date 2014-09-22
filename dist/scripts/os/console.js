@@ -19,6 +19,9 @@ var TSOS;
             this.currentXPosition = currentXPosition;
             this.currentYPosition = currentYPosition;
             this.buffer = buffer;
+            //properties
+            this.historyRecall = [];
+            this.currentRecall = 0;
         }
         //lazy expansion
         Console.prototype.growCanvas = function () {
@@ -56,6 +59,13 @@ var TSOS;
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);
 
+                    //store the line for later use
+                    this.historyRecall.push(this.buffer);
+                    this.currentRecall = this.currentRecall + 1;
+                    if (this.historyRecall.length === 1) {
+                        this.currentRecall = this.currentRecall - 1;
+                    }
+
                     // ... and reset our buffer.
                     this.buffer = "";
                 } else if (chr === String.fromCharCode(8)) {
@@ -78,6 +88,30 @@ var TSOS;
                                 this.putText(_OsShell.commandList[i].command.charAt(j));
                             }
                         }
+                    }
+                    //used 130 and 132 as the up and down arrows have no ascii values and these values are not likely to be used.
+                } else if (chr === "100" || chr === "102") {
+                    //clear line
+                    _DrawingContext.clearRect(13, this.currentYPosition - 13, 500, this.currentFontSize + 5);
+                    this.currentXPosition = 13;
+                    if (chr === "100") {
+                        if (this.currentRecall != 0) {
+                            this.buffer = this.historyRecall[this.currentRecall];
+                            this.currentRecall = this.currentRecall - 1;
+                        } else {
+                            this.buffer = this.historyRecall[this.currentRecall];
+                        }
+                    } else {
+                        if (this.currentRecall != this.historyRecall.length - 1) {
+                            this.buffer = this.historyRecall[this.currentRecall];
+                            this.currentRecall = this.currentRecall + 1;
+                        } else {
+                            this.buffer = this.historyRecall[this.currentRecall];
+                        }
+                    }
+
+                    for (var j = 0; j < this.buffer.length; j++) {
+                        this.putText(this.buffer.charAt(j));
                     }
                 } else {
                     // This is a "normal" character, so ...
