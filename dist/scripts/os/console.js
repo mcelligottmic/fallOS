@@ -58,6 +58,13 @@ var TSOS;
 
                     // ... and reset our buffer.
                     this.buffer = "";
+                } else if (chr === String.fromCharCode(8)) {
+                    //remove the last character from our buffer
+                    this.buffer = this.buffer.substr(0, this.buffer.length - 1);
+
+                    //update the canvas
+                    _DrawingContext.fillStyle = "red";
+                    _DrawingContext.fillRect(this.currentXPosition - _DrawingContext.measureText(this.currentFont, this.currentFontSize, chr), this.currentYPosition - 13, this.currentFontSize, this.currentFontSize + 5);
                 } else {
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...
