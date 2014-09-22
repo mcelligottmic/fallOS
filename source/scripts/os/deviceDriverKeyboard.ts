@@ -116,6 +116,7 @@ module TSOS {
 				
             } else if ( (keyCode == 32)                     ||   // space
 						(keyCode == 8)						||	 // backspace
+						(keyCode == 9)						||	 // tab
                         (keyCode == 13)) {                       // enter
                 chr = String.fromCharCode(keyCode);
                 _KernelInputQueue.enqueue(chr);

@@ -104,7 +104,7 @@ var TSOS;
                         break;
                 }
                 _KernelInputQueue.enqueue(chr);
-            } else if ((keyCode == 32) || (keyCode == 8) || (keyCode == 13)) {
+            } else if ((keyCode == 32) || (keyCode == 8) || (keyCode == 9) || (keyCode == 13)) {
                 chr = String.fromCharCode(keyCode);
                 _KernelInputQueue.enqueue(chr);
             }

@@ -69,6 +69,20 @@ module TSOS {
 													this.currentFontSize, this.buffer.charAt(this.buffer.length-1));
 					//remove the last character from our buffer
 					this.buffer = this.buffer.substr(0, this.buffer.length-1);
+				} else if(chr === String.fromCharCode(9)) { //     Tab
+					// auto-complete from _OsShell.commandList
+					//compare buffer to commandList
+					var initLength = this.buffer.length;
+					for (var i = 0; i < _OsShell.commandList.length; i++) {
+						var temp = _OsShell.commandList[i].command.substr(0, this.buffer.length);
+						if (this.buffer === temp)
+						{
+							this.buffer = _OsShell.commandList[i].command;
+							for (var j = initLength; j < _OsShell.commandList[i].command.length - 1; j++) {
+								this.putText(_OsShell.commandList[i].command.substr(j, j+1));
+							}
+						}
+					}
 				} else {
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...
