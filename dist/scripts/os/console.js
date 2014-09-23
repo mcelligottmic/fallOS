@@ -27,9 +27,9 @@ var TSOS;
         }
         //lazy expansion
         Console.prototype.growCanvas = function () {
-            if (_Canvas.height - this.currentYPosition < 400) {
+            if (_Canvas.height - this.currentYPosition < 500) {
                 var temp = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
-                _Canvas.height = _Canvas.height + 400;
+                _Canvas.height = _Canvas.height + 500;
                 _DrawingContext.putImageData(temp, 0, 0);
             }
         };
