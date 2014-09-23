@@ -17,6 +17,7 @@ module TSOS {
 		public historyRecall = [];
 		public currentRecall = 0;
 		public linesFromCommand = 0;
+		public xPositions = []; 
 
         constructor(public currentFont = _DefaultFontFamily,
                     public currentFontSize = _DefaultFontSize,
@@ -43,6 +44,7 @@ module TSOS {
 								text);
 			//if its going to be pasted the canvas move to next line and print
 			if (_Canvas.width <= this.currentXPosition + offset) {
+				this.xPositions.push(this.currentXPosition);
 				_Console.advanceLine();
 				this.linesFromCommand = this.linesFromCommand + 1;
 			}
@@ -81,18 +83,13 @@ module TSOS {
                     // ... and reset our buffer.
                     this.buffer = "";
                 } else if(chr === String.fromCharCode(8)) { //     Backspace
-					/*
+					var upOneLine = false;
 					if ( (this.linesFromCommand != 0) && 
-							(this.currentXPosition == _DrawingContext.measureText(this.currentFont, 
-														this.currentFontSize, this.buffer.charAt(this.buffer.length-1) ) ) && 
+							(this.currentXPosition - _DrawingContext.measureText(this.currentFont, 
+														this.currentFontSize, this.buffer.charAt(this.buffer.length-1) ) <= 0 ) && 
 							(this.currentYPosition != _DefaultFontSize) ) {
-						this.currentYPosition -= _DefaultFontSize + 
-                                     _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
-                                     _FontHeightMargin;
-						this.currentXPosition = _Canvas.width - _DrawingContext.measureText(this.currentFont, 
-													this.currentFontSize, this.buffer.charAt(this.buffer.length-1));
+							upOneLine = true;
 					}
-					*/
 					//update the canvas
 					//_DrawingContext.fillStyle="red";
 					_DrawingContext.clearRect(this.currentXPosition - _DrawingContext.measureText(this.currentFont, 
@@ -105,6 +102,13 @@ module TSOS {
 													this.currentFontSize, this.buffer.charAt(this.buffer.length-1));
 					//remove the last character from our buffer
 					this.buffer = this.buffer.substr(0, this.buffer.length-1);
+					if (upOneLine) {
+						this.currentYPosition -= _DefaultFontSize + 
+                                     _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
+                                     _FontHeightMargin;
+						this.currentXPosition = this.xPositions[this.xPositions.length-1];
+						this.xPositions.pop();
+					}
 				} else if(chr === String.fromCharCode(9)) { //     Tab
 					// auto-complete from _OsShell.commandList
 					//compare buffer to commandList
