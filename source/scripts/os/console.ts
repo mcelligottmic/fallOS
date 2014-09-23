@@ -41,6 +41,7 @@ module TSOS {
 								this.currentFontSize,
 								//this.buffer.charAt(this.buffer.length-1);
 								text);
+			//if its going to be pasted the canvas move to next line and print
 			if (_Canvas.width <= this.currentXPosition + offset) {
 				_Console.advanceLine();
 				this.linesFromCommand = this.linesFromCommand + 1;
@@ -169,6 +170,7 @@ module TSOS {
 				if ( _DrawingContext.measureText(this.currentFont,
 								this.currentFontSize,
 								text) > _Canvas.width) {
+					//separates by space so it looks nice
 					var splitted = text.split(" ");
 					for (var i =0; i < splitted.length; i++) {
 						if (_Canvas.width <= this.currentXPosition + _DrawingContext.measureText(this.currentFont,

@@ -65,6 +65,14 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellRules, "rules", "- rules for a world with zombies");
             this.commandList[this.commandList.length] = sc;
 
+            // BSOD
+            sc = new TSOS.ShellCommand(this.shellBSOD, "bsod", "- Blue Screen of Death...great power comes with great responsibility");
+            this.commandList[this.commandList.length] = sc;
+
+            // load
+            sc = new TSOS.ShellCommand(this.shellLoad, "load", "- validates the code in User Program Input. Only Hex digits and spaces are valid.");
+            this.commandList[this.commandList.length] = sc;
+
             // status <string>
             sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Displays <string> under the status bar.");
             this.commandList[this.commandList.length] = sc;
@@ -285,10 +293,12 @@ var TSOS;
             _StdOut.putText("Today's date is " + (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear() + " and the time is " + d.getHours() + ":" + d.getMinutes());
         };
 
+        //tells you where you are...like you didn't know
         Shell.prototype.shellWhereAmI = function (args) {
             _StdOut.putText("Your at a computer...");
         };
 
+        //randomly picks rules from an array base on the time
         Shell.prototype.shellRules = function (args) {
             var list = [
                 "#1 Cardio", "#2 Double Tap", "#3 Beware of Bathrooms", "#4 Wear Seat Belts", "#5 No Attachments",
@@ -314,6 +324,33 @@ var TSOS;
                 _StdOut.putText(list[7]);
             } else {
                 _StdOut.putText(list[8]);
+            }
+        };
+
+        //Error screen when Kernel traps an OS error
+        Shell.prototype.shellBSOD = function (args) {
+            //create an interrupt used 2 instead of standard debug exception due to it already being used
+            _Kernel.krnInterruptHandler(2, "test");
+        };
+
+        //validates the user code in the HTML5 text area
+        Shell.prototype.shellLoad = function (args) {
+            //load the text
+            var temp = document.getElementById('taProgramInput');
+            var program = temp.value;
+            var splitted = program.split(" ");
+            var valid;
+            for (var i = 0; i < splitted.length; i++) {
+                if ((splitted[i] === "A9") || (splitted[i] === "AD") || (splitted[i] === "8D") || (splitted[i] === "6D") || (splitted[i] === "A2") || (splitted[i] === "AE") || (splitted[i] === "A0") || (splitted[i] === "AC") || (splitted[i] === "EA") || (splitted[i] === "00") || (splitted[i] === "EC") || (splitted[i] === "D0") || (splitted[i] === "EE") || (splitted[i] === "FF")) {
+                    valid = true;
+                } else {
+                    valid = false;
+                }
+            }
+            if (!valid) {
+                _StdOut.putText("invalid...do you need some help?");
+            } else {
+                _StdOut.putText("successfully loaded");
             }
         };
 

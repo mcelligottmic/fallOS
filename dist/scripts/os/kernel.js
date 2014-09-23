@@ -161,6 +161,10 @@ var TSOS;
             TSOS.Control.hostLog("OS ERROR - TRAP: " + msg);
 
             // TODO: Display error on console, perhaps in some sort of colored screen. (Perhaps blue?)
+            _DrawingContext.fillStyle = "Blue";
+            _DrawingContext.fillRect(0, 0, _Canvas.width, _Canvas.height);
+            _StdOut.putText("Your PC ran into a problem that it couldn't handle and is now restarting...");
+            TSOS.Control.hostBtnHaltOS_click(this);
             this.krnShutdown();
         };
         return Kernel;

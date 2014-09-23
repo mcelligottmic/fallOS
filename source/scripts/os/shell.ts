@@ -93,6 +93,18 @@ module TSOS {
                                   "- rules for a world with zombies");
             this.commandList[this.commandList.length] = sc;
 			
+			// BSOD
+            sc = new ShellCommand(this.shellBSOD,
+                                  "bsod",
+                                  "- Blue Screen of Death...great power comes with great responsibility");
+            this.commandList[this.commandList.length] = sc;
+			
+			// load 
+            sc = new ShellCommand(this.shellLoad,
+                                  "load",
+                                  "- validates the code in User Program Input. Only Hex digits and spaces are valid.");
+            this.commandList[this.commandList.length] = sc;
+			
 			// status <string>
             sc = new ShellCommand(this.shellStatus,
                                   "status",
@@ -309,10 +321,12 @@ module TSOS {
 				" and the time is " + d.getHours() + ":" + d.getMinutes() );
         }
 		
+		//tells you where you are...like you didn't know
 		public shellWhereAmI(args) {
             _StdOut.putText("Your at a computer...");
         }
 		
+		//randomly picks rules from an array base on the time
 		public shellRules(args) {
 			var list:string[] = ["#1 Cardio","#2 Double Tap","#3 Beware of Bathrooms","#4 Wear Seat Belts","#5 No Attachments",
 								"#18 Limber up","#22 When in doubt Know your way out","#31 Check the back seat",
@@ -338,8 +352,47 @@ module TSOS {
 			} else {
 				_StdOut.putText(list[8]);
 			}
-				
         }
+		
+		//Error screen when Kernel traps an OS error
+		public shellBSOD(args) {
+            //create an interrupt used 2 instead of standard debug exception due to it already being used
+			_Kernel.krnInterruptHandler(2, "test");
+		}
+		
+		//validates the user code in the HTML5 text area
+		public shellLoad(args) {
+            //load the text
+			var temp = <HTMLTextAreaElement>document.getElementById('taProgramInput');
+			var program : string = temp.value;
+			var splitted = program.split(" ");
+			var valid : Boolean;
+			for (var i = 0; i < splitted.length; i++) {
+				if ((splitted[i] === "A9") || 
+					(splitted[i] === "AD") ||
+					(splitted[i] === "8D") ||
+					(splitted[i] === "6D") ||
+					(splitted[i] === "A2") ||
+					(splitted[i] === "AE") ||
+					(splitted[i] === "A0") ||
+					(splitted[i] === "AC") ||
+					(splitted[i] === "EA") ||
+					(splitted[i] === "00") || 
+					(splitted[i] === "EC") ||
+					(splitted[i] === "D0") ||
+					(splitted[i] === "EE") ||
+					(splitted[i] === "FF") ) {
+					valid = true;
+				} else {
+					valid = false;
+				}
+			}
+			if (!valid) {
+				_StdOut.putText("invalid...do you need some help?");
+			} else {
+				_StdOut.putText("successfully loaded");
+			}
+		}
 		
 		public shellStatus(args) {
             if (args.length > 0) {
