@@ -74,37 +74,37 @@ module TSOS {
                                   "prompt",
                                   "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
-			
+
 			// date
             sc = new ShellCommand(this.shellDate,
                                   "date",
                                   "- Displays the current date and time");
             this.commandList[this.commandList.length] = sc;
-			
+
 			// whereami
             sc = new ShellCommand(this.shellWhereAmI,
                                   "whereami",
                                   "- Displays your current location.");
             this.commandList[this.commandList.length] = sc;
-			
+
 			// rules
             sc = new ShellCommand(this.shellRules,
                                   "rules",
                                   "- rules for a world with zombies");
             this.commandList[this.commandList.length] = sc;
-			
+
 			// BSOD
             sc = new ShellCommand(this.shellBSOD,
                                   "bsod",
                                   "- Blue Screen of Death...great power comes with great responsibility");
             this.commandList[this.commandList.length] = sc;
-			
-			// load 
+
+			// load
             sc = new ShellCommand(this.shellLoad,
                                   "load",
                                   "- validates the code in User Program Input. Only Hex digits and spaces are valid.");
             this.commandList[this.commandList.length] = sc;
-			
+
 			// status <string>
             sc = new ShellCommand(this.shellStatus,
                                   "status",
@@ -314,23 +314,23 @@ module TSOS {
                 _StdOut.putText("Usage: prompt <string>  Please supply a string.");
             }
         }
-		
+
 		public shellDate(args) {
 			var d = new Date();
-            _StdOut.putText("Today's date is " + (d.getMonth() + 1)+ "/" + d.getDate() + "/" + d.getFullYear() + 
+            _StdOut.putText("Today's date is " + (d.getMonth() + 1)+ "/" + d.getDate() + "/" + d.getFullYear() +
 				" and the time is " + d.getHours() + ":" + d.getMinutes() );
         }
-		
+
 		//tells you where you are...like you didn't know
 		public shellWhereAmI(args) {
             _StdOut.putText("Your at a computer...");
         }
-		
+
 		//randomly picks rules from an array base on the time
 		public shellRules(args) {
 			var list:string[] = ["#1 Cardio","#2 Double Tap","#3 Beware of Bathrooms","#4 Wear Seat Belts","#5 No Attachments",
 								"#18 Limber up","#22 When in doubt Know your way out","#31 Check the back seat",
-								"#32Enjoy the little things"]; 
+								"#32Enjoy the little things"];
             var date = new Date();
 			var time = (date.getMilliseconds());
 			if (time < 100) {
@@ -353,47 +353,40 @@ module TSOS {
 				_StdOut.putText(list[8]);
 			}
         }
-		
+
 		//Error screen when Kernel traps an OS error
 		public shellBSOD(args) {
             //create an interrupt used 2 instead of standard debug exception due to it already being used
 			_Kernel.krnInterruptHandler(2, "test");
 		}
-		
+
 		//validates the user code in the HTML5 text area
 		public shellLoad(args) {
-            //load the text
+      //load the text
 			var temp = <HTMLTextAreaElement>document.getElementById('taProgramInput');
 			var program : string = temp.value;
-			var splitted = program.split(" ");
-			var valid : Boolean;
-			for (var i = 0; i < splitted.length; i++) {
-				if ((splitted[i] === "A9") || 
-					(splitted[i] === "AD") ||
-					(splitted[i] === "8D") ||
-					(splitted[i] === "6D") ||
-					(splitted[i] === "A2") ||
-					(splitted[i] === "AE") ||
-					(splitted[i] === "A0") ||
-					(splitted[i] === "AC") ||
-					(splitted[i] === "EA") ||
-					(splitted[i] === "00") || 
-					(splitted[i] === "EC") ||
-					(splitted[i] === "D0") ||
-					(splitted[i] === "EE") ||
-					(splitted[i] === "FF") ) {
-					valid = true;
-				} else {
-					valid = false;
-				}
-			}
-			if (!valid) {
-				_StdOut.putText("invalid...do you need some help?");
-			} else {
-				_StdOut.putText("successfully loaded");
-			}
-		}
-		
+			program = program.replace(/\s+/g, '');
+      var valid = true;
+      // \d matches to a digit
+      var re = /[A-Fa-f0-9][A-Fa-f0-9]/;
+      //if the program is odd it is invalid and we don't need to check
+      if (program.length % 2 == 0) {
+        for (var i = 0; i < program.length; i += 2) {
+          if (!re.test(program)) {
+            valid = false;
+          }
+        }
+      } else {
+          valid = false;
+        }
+        if (!valid) {
+          _StdOut.putText("invalid...do you need some help?");
+        } else {
+				      _StdOut.putText("successfully loaded");
+              //store program into main memory starting at location $0000
+			  }
+    }//end Load
+
 		public shellStatus(args) {
             if (args.length > 0) {
 				var newString: string = "";

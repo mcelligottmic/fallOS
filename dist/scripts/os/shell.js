@@ -338,19 +338,27 @@ var TSOS;
             //load the text
             var temp = document.getElementById('taProgramInput');
             var program = temp.value;
-            var splitted = program.split(" ");
-            var valid;
-            for (var i = 0; i < splitted.length; i++) {
-                if ((splitted[i] === "A9") || (splitted[i] === "AD") || (splitted[i] === "8D") || (splitted[i] === "6D") || (splitted[i] === "A2") || (splitted[i] === "AE") || (splitted[i] === "A0") || (splitted[i] === "AC") || (splitted[i] === "EA") || (splitted[i] === "00") || (splitted[i] === "EC") || (splitted[i] === "D0") || (splitted[i] === "EE") || (splitted[i] === "FF")) {
-                    valid = true;
-                } else {
-                    valid = false;
+            program = program.replace(/\s+/g, '');
+            var valid = true;
+
+            // \d matches to a digit
+            var re = /[A-Fa-f0-9][A-Fa-f0-9]/;
+
+            //if the program is odd it is invalid and we don't need to check
+            if (program.length % 2 == 0) {
+                for (var i = 0; i < program.length; i += 2) {
+                    if (!re.test(program)) {
+                        valid = false;
+                    }
                 }
+            } else {
+                valid = false;
             }
             if (!valid) {
                 _StdOut.putText("invalid...do you need some help?");
             } else {
                 _StdOut.putText("successfully loaded");
+                //store program into main memory starting at location $0000
             }
         };
 
