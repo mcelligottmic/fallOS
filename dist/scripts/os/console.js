@@ -3,7 +3,8 @@
 Console.ts
 Requires globals.ts
 The OS Console - stdIn and stdOut by default.
-Note: This is not the Shell.  The Shell is the "command line interface" (CLI) or interpreter for this console.
+Note: This is not the Shell.  The Shell is the "command line interface"
+(CLI) or interpreter for this console.
 ------------ */
 var TSOS;
 (function (TSOS) {
@@ -25,12 +26,14 @@ var TSOS;
             this.linesFromCommand = 0;
             this.xPositions = [];
         }
-        //lazy expansion
-        Console.prototype.growCanvas = function () {
-            if (_Canvas.height - this.currentYPosition < 500) {
-                var temp = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
-                _Canvas.height = _Canvas.height + 500;
+        //scrolling the canvas
+        Console.prototype.scroll = function () {
+            var offset = _DefaultFontSize + _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) + _FontHeightMargin;
+            if (this.currentYPosition >= _Canvas.height - offset) {
+                var temp = _DrawingContext.getImageData(0, _DefaultFontSize + 2 * _FontHeightMargin, _Canvas.width, _Canvas.height - offset);
+                _DrawingContext.clearRect(0, 0, _Canvas.width, _Canvas.height);
                 _DrawingContext.putImageData(temp, 0, 0);
+                this.currentYPosition -= offset;
             }
         };
 
@@ -65,10 +68,9 @@ var TSOS;
                 // Get the next character from the kernel input queue.
                 var chr = _KernelInputQueue.dequeue();
 
-                // Check to see if it's "special" (enter or ctrl-c) or "normal" (anything else that the keyboard device driver gave us).
+                // Check to see if it's "special" (enter or ctrl-c) or "normal"
+                // (anything else that the keyboard device driver gave us).
                 if (chr === String.fromCharCode(13)) {
-                    this.growCanvas();
-
                     // The enter key marks the end of a console command, so ...
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);
@@ -90,7 +92,7 @@ var TSOS;
 
                     //update the canvas
                     //_DrawingContext.fillStyle="red";
-                    _DrawingContext.clearRect(this.currentXPosition - _DrawingContext.measureText(this.currentFont, this.currentFontSize, this.buffer.charAt(this.buffer.length - 1)), this.currentYPosition - 13, _DrawingContext.measureText(this.currentFont, this.currentFontSize, this.buffer.charAt(this.buffer.length - 1)), this.currentFontSize + 5);
+                    _DrawingContext.clearRect(this.currentXPosition - _DrawingContext.measureText(this.currentFont, this.currentFontSize, this.buffer.charAt(this.buffer.length - 1)), this.currentYPosition - _DefaultFontSize - _FontHeightMargin + 1, _DrawingContext.measureText(this.currentFont, this.currentFontSize, this.buffer.charAt(this.buffer.length - 1)), this.currentFontSize + 2 * _FontHeightMargin);
                     this.currentXPosition = this.currentXPosition - _DrawingContext.measureText(this.currentFont, this.currentFontSize, this.buffer.charAt(this.buffer.length - 1));
 
                     //remove the last character from our buffer
@@ -192,7 +194,9 @@ var TSOS;
             * Font height margin is extra spacing between the lines.
             */
             this.currentYPosition += _DefaultFontSize + _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) + _FontHeightMargin;
+
             // TODO: Handle scrolling. (Project 1)
+            this.scroll();
         };
         return Console;
     })();
