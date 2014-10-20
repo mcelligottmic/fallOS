@@ -366,6 +366,7 @@ module TSOS {
 			var temp = <HTMLTextAreaElement>document.getElementById('taProgramInput');
 			var program : string = temp.value;
 			program = program.replace(/\s+/g, '');
+<<<<<<< HEAD
       var valid = true;
       // \d matches to a digit
       var re = /[A-Fa-f0-9][A-Fa-f0-9]/;
@@ -387,6 +388,28 @@ module TSOS {
 			  }
     }//end Load
 
+=======
+			var valid : Boolean = true;
+			// \d matches to a digit
+			var re = /[A-Fa-f0-9][A-Fa-f0-9]/;
+			//if the program is odd it is invalid and we don't need to check
+			if (program.length%2 == 0) {
+				for (var i = 0; i < program.length; i +=2) {
+					if (!re.test(program)) {
+						valid = false;
+					}
+				}
+			} else {
+				valid = false;
+			}
+			if (!valid) {
+				_StdOut.putText("invalid...do you need some help?");
+			} else {
+				_StdOut.putText("successfully loaded");
+			}
+		}
+		
+>>>>>>> 8f6c57478c14104aba11d51d9d8c6b4a8a3af088
 		public shellStatus(args) {
             if (args.length > 0) {
 				var newString: string = "";
