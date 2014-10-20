@@ -339,6 +339,7 @@ var TSOS;
             var temp = document.getElementById('taProgramInput');
             var program = temp.value;
             program = program.replace(/\s+/g, '');
+
             var valid = true;
 
             // \d matches to a digit

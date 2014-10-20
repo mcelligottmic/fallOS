@@ -12,12 +12,12 @@
 module TSOS {
 
     export class Console {
-	
+
 		//properties
 		public historyRecall = [];
 		public currentRecall = 0;
 		public linesFromCommand = 0;
-		public xPositions = []; 
+		public xPositions = [];
 
         constructor(public currentFont = _DefaultFontFamily,
                     public currentFontSize = _DefaultFontSize,
@@ -26,16 +26,23 @@ module TSOS {
                     public buffer = "") {
 
         }
-		
-		//lazy expansion
-		public growCanvas(): void {
-			if ( _Canvas.height - this.currentYPosition < 500) {
-				var temp = _DrawingContext.getImageData(0,0,_Canvas.width, _Canvas.height);
-				_Canvas.height = _Canvas.height + 500;
-				_DrawingContext.putImageData(temp,0,0); 
-			}
-		}
-		
+
+		//scrolling the canvas
+    public scroll(): void {
+      var offset = _DefaultFontSize +
+                    _DrawingContext.fontDescent(this.currentFont,
+                  this.currentFontSize) + _FontHeightMargin
+      // if the current y position is at the bottom of the canvas scroll the
+      // canvas back one line
+      if (this.currentYPosition >= _Canvas.height -offset) {
+          var temp = _DrawingContext.getImageData(0, _DefaultFontSize +
+            2*_FontHeightMargin, _Canvas.width, _Canvas.height - offset);
+            _DrawingContext.clearRect(0,0,_Canvas.width, _Canvas.height);
+            _DrawingContext.putImageData(temp,0,0);
+            this.currentYPosition -= offset;
+      }
+    }
+
 		//line wrap
 		public wrapLine(text): void {
 			var offset = _DrawingContext.measureText(this.currentFont,
@@ -70,7 +77,6 @@ module TSOS {
                 var chr = _KernelInputQueue.dequeue();
                 // Check to see if it's "special" (enter or ctrl-c) or "normal" (anything else that the keyboard device driver gave us).
                 if (chr === String.fromCharCode(13)) { //     Enter key
-                    this.growCanvas();
 					// The enter key marks the end of a console command, so ...
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);
@@ -84,26 +90,26 @@ module TSOS {
                     this.buffer = "";
                 } else if(chr === String.fromCharCode(8)) { //     Backspace
 					var upOneLine = false;
-					if ( (this.linesFromCommand != 0) && 
-							(this.currentXPosition - _DrawingContext.measureText(this.currentFont, 
-														this.currentFontSize, this.buffer.charAt(this.buffer.length-1) ) <= 0 ) && 
+					if ( (this.linesFromCommand != 0) &&
+							(this.currentXPosition - _DrawingContext.measureText(this.currentFont,
+														this.currentFontSize, this.buffer.charAt(this.buffer.length-1) ) <= 0 ) &&
 							(this.currentYPosition != _DefaultFontSize) ) {
 							upOneLine = true;
 					}
 					//update the canvas
 					//_DrawingContext.fillStyle="red";
-					_DrawingContext.clearRect(this.currentXPosition - _DrawingContext.measureText(this.currentFont, 
+					_DrawingContext.clearRect(this.currentXPosition - _DrawingContext.measureText(this.currentFont,
 													this.currentFontSize, this.buffer.charAt(this.buffer.length-1)) ,
 												this.currentYPosition - 13,
-												_DrawingContext.measureText(this.currentFont, 
-													this.currentFontSize, this.buffer.charAt(this.buffer.length-1)), 
+												_DrawingContext.measureText(this.currentFont,
+													this.currentFontSize, this.buffer.charAt(this.buffer.length-1)),
 												this.currentFontSize + 5);
-					this.currentXPosition = this.currentXPosition - _DrawingContext.measureText(this.currentFont, 
+					this.currentXPosition = this.currentXPosition - _DrawingContext.measureText(this.currentFont,
 													this.currentFontSize, this.buffer.charAt(this.buffer.length-1));
 					//remove the last character from our buffer
 					this.buffer = this.buffer.substr(0, this.buffer.length-1);
 					if (upOneLine) {
-						this.currentYPosition -= _DefaultFontSize + 
+						this.currentYPosition -= _DefaultFontSize +
                                      _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                                      _FontHeightMargin;
 						this.currentXPosition = this.xPositions[this.xPositions.length-1];
@@ -126,9 +132,9 @@ module TSOS {
 				//used 130 and 132 as the up and down arrows have no ascii values and these values are not likely to be used.
 				} else if( chr === "100" || chr === "102" ) { //     up and down arrows
 					//clear line
-					_DrawingContext.clearRect(13, 
+					_DrawingContext.clearRect(13,
 												this.currentYPosition - 13,
-												500, 
+												500,
 												this.currentFontSize + 5);
 					this.currentXPosition = 13;
 					if (chr === "100") {
@@ -150,7 +156,7 @@ module TSOS {
 					for (var j = 0; j < this.buffer.length; j++) {
 						this.putText(this.buffer.charAt(j));
 					}
-					
+
 				} else {
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...
@@ -181,7 +187,7 @@ module TSOS {
 								this.currentFontSize,
 								splitted[i]) ){
 							this.advanceLine();
-						
+
 						}
 						this.putText(splitted[i]);
 						this.putText(" ");
@@ -205,11 +211,12 @@ module TSOS {
              * Font descent measures from the baseline to the lowest point in the font.
              * Font height margin is extra spacing between the lines.
              */
-            this.currentYPosition += _DefaultFontSize + 
+            this.currentYPosition += _DefaultFontSize +
                                      _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                                      _FontHeightMargin;
 
             // TODO: Handle scrolling. (Project 1)
+            this.scroll();
         }
     }
  }

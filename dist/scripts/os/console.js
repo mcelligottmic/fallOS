@@ -25,12 +25,17 @@ var TSOS;
             this.linesFromCommand = 0;
             this.xPositions = [];
         }
-        //lazy expansion
-        Console.prototype.growCanvas = function () {
-            if (_Canvas.height - this.currentYPosition < 500) {
-                var temp = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
-                _Canvas.height = _Canvas.height + 500;
+        //scrolling the canvas
+        Console.prototype.scroll = function () {
+            var offset = _DefaultFontSize + _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) + _FontHeightMargin;
+
+            // if the current y position is at the bottom of the canvas scroll the
+            // canvas back one line
+            if (this.currentYPosition >= _Canvas.height - offset) {
+                var temp = _DrawingContext.getImageData(0, _DefaultFontSize + 2 * _FontHeightMargin, _Canvas.width, _Canvas.height - offset);
+                _DrawingContext.clearRect(0, 0, _Canvas.width, _Canvas.height);
                 _DrawingContext.putImageData(temp, 0, 0);
+                this.currentYPosition -= offset;
             }
         };
 
@@ -67,8 +72,6 @@ var TSOS;
 
                 // Check to see if it's "special" (enter or ctrl-c) or "normal" (anything else that the keyboard device driver gave us).
                 if (chr === String.fromCharCode(13)) {
-                    this.growCanvas();
-
                     // The enter key marks the end of a console command, so ...
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);
@@ -192,7 +195,9 @@ var TSOS;
             * Font height margin is extra spacing between the lines.
             */
             this.currentYPosition += _DefaultFontSize + _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) + _FontHeightMargin;
+
             // TODO: Handle scrolling. (Project 1)
+            this.scroll();
         };
         return Console;
     })();
