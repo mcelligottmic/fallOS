@@ -16,7 +16,7 @@ module TSOS {
 
   export class PCB {
     //properties
-    public PID;
+    public pid;
     public base;
     public limit;
     public xRegister;

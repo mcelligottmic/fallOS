@@ -20,7 +20,7 @@ var TSOS;
             this.memory = new TSOS.mainMemory(256);
         };
 
-        MemoryManager.prototype.load = function (program, PID) {
+        MemoryManager.prototype.load = function (program, pid) {
             //determine which blocks are open
             //determine how many blocks of memory we need
             this.loadIndex = 0; //update this when we have more blocks
@@ -40,8 +40,8 @@ var TSOS;
             }
 
             //store base and limit into PCB
-            _ProcessManager.processes[PID].base = this.loadIndex;
-            _ProcessManager.processes[PID].limit = this.loadIndex + this.BLOCKSIZE;
+            _ProcessManager.processes[pid].base = this.loadIndex;
+            _ProcessManager.processes[pid].limit = this.loadIndex + this.BLOCKSIZE;
         };
 
         //fills main memory with 00 at each location

@@ -10,7 +10,7 @@ module TSOS {
 
   export class ProcessManager {
     //properties
-    public currentPID: number;
+    public currentPid: number;
     public processes = [];
 
     constructor() {
@@ -18,14 +18,14 @@ module TSOS {
     }
 
     public init(): void {
-      this.currentPID = -1;
+      this.currentPid = -1;
     }//end init
 
     public load(process: string): number {
-      this.currentPID++;
-      this.processes[this.currentPID] = new PCB();
-      _MemoryManager.load(process, this.currentPID);
-      return this.currentPID;
+      this.currentPid++;
+      this.processes[this.currentPid] = new PCB();
+      _MemoryManager.load(process, this.currentPid);
+      return this.currentPid;
     }
 
   }//end class

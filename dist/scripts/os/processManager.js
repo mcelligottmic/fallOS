@@ -11,14 +11,14 @@ var TSOS;
             this.init();
         }
         ProcessManager.prototype.init = function () {
-            this.currentPID = -1;
+            this.currentPid = -1;
         };
 
         ProcessManager.prototype.load = function (process) {
-            this.currentPID++;
-            this.processes[this.currentPID] = new TSOS.PCB();
-            _MemoryManager.load(process, this.currentPID);
-            return this.currentPID;
+            this.currentPid++;
+            this.processes[this.currentPid] = new TSOS.PCB();
+            _MemoryManager.load(process, this.currentPid);
+            return this.currentPid;
         };
         return ProcessManager;
     })();

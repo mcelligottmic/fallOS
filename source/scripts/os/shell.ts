@@ -105,6 +105,12 @@ module TSOS {
                                   "- validates the code in User Program Input. Only Hex digits and spaces are valid.");
             this.commandList[this.commandList.length] = sc;
 
+            // run <number>
+            sc = new ShellCommand(this.shellRun,
+                            "run",
+                            "<number> - runs the program having pid of <number>.");
+            this.commandList[this.commandList.length] = sc;
+
 			// status <string>
             sc = new ShellCommand(this.shellStatus,
                                   "status",
@@ -387,6 +393,11 @@ module TSOS {
           var pid = _ProcessManager.load(program);
 				  _StdOut.putText("Process ID: " + pid);
 			  }
+    }//end Load
+
+    //runs the program that is loaded
+    public shellRun(pid: number) {
+      //run the program 
     }//end Load
 
 		public shellStatus(args) {

@@ -73,6 +73,10 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellLoad, "load", "- validates the code in User Program Input. Only Hex digits and spaces are valid.");
             this.commandList[this.commandList.length] = sc;
 
+            // run <number>
+            sc = new TSOS.ShellCommand(this.shellRun, "run", "<number> - runs the program having pid of <number>.");
+            this.commandList[this.commandList.length] = sc;
+
             // status <string>
             sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Displays <string> under the status bar.");
             this.commandList[this.commandList.length] = sc;
@@ -362,6 +366,11 @@ var TSOS;
                 var pid = _ProcessManager.load(program);
                 _StdOut.putText("Process ID: " + pid);
             }
+        };
+
+        //runs the program that is loaded
+        Shell.prototype.shellRun = function (pid) {
+            //run the program
         };
 
         Shell.prototype.shellStatus = function (args) {
