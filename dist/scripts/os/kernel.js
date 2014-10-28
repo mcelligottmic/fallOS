@@ -36,6 +36,9 @@ var TSOS;
             this.krnTrace(_krnKeyboardDriver.status);
 
             //
+            _ProcessManager = new TSOS.ProcessManager();
+            _MemoryManager = new TSOS.MemoryManager();
+
             // ... more?
             //
             // Enable the OS Interrupts.  (Not the CPU clock interrupt, as that is done in the hardware sim.)

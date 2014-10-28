@@ -7,7 +7,7 @@
    <title>
       TSOS - a browser-based virtual Operating System in TypeScript
    </title>
-	
+
    <script type="text/javascript" src="jquery-1.11.1.min.js"></script>
    <!-- Globals CONSTANTS and _Variables. Must included be first. -->
    <script type="text/javascript" src="dist/scripts/globals.js"></script>
@@ -16,6 +16,7 @@
    <script type="text/javascript" src="dist/scripts/host/control.js"></script>
    <script type="text/javascript" src="dist/scripts/host/devices.js"></script>
    <script type="text/javascript" src="dist/scripts/host/cpu.js"></script>
+   <script type="text/javascript" src="dist/scripts/host/mainMemory.js"></script>
 
    <!-- Virtual OS Routines: Make sure Kernel code is last, since it needs those above it. -->
    <script type="text/javascript" src="dist/scripts/os/interrupt.js"></script>
@@ -27,6 +28,9 @@
    <script type="text/javascript" src="dist/scripts/os/shell.js"></script>
    <script type="text/javascript" src="dist/scripts/os/shellCommand.js"></script>
    <script type="text/javascript" src="dist/scripts/os/userCommand.js"></script>
+   <script type="text/javascript" src="dist/scripts/os/memoryManager.js"></script>
+   <script type="text/javascript" src="dist/scripts/os/PCB.js"></script>
+   <script type="text/javascript" src="dist/scripts/os/processManager.js"></script>
    <script type="text/javascript" src="dist/scripts/os/kernel.js"></script>
 
    <!-- Other Routines -->
@@ -67,7 +71,7 @@
              tabindex="2"
              onclick="TSOS.Control.hostBtnReset_click(this);">
    </div>
-   
+
    <div id="divTaskBar" style= "margin:4px; width:100%; height:200px; float:left;">
       <h3 style="font-weight: bold;"> Clock: </h3>
 	   <div id="clockBox" class="box" style="background-color: #FFFFFF;">
@@ -78,7 +82,7 @@
 	   </div>
    </div>
 
-   <div id="divConsole" style="margin:4px; width:510px; height:510px; float:left; overflow: auto;">
+   <div id="divConsole" style="margin:4px; width:510px; height:510px; float:left; overflow: autos;">
 	  <canvas id="display"
               width="480px"
               height="500px"

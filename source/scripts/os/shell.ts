@@ -383,8 +383,9 @@ module TSOS {
         if (!valid) {
           _StdOut.putText("invalid...do you need some help?");
         } else {
-				      _StdOut.putText("successfully loaded");
-              //store program into main memory starting at location $0000
+          //store program into main memory starting at location $0000
+          var pid = _ProcessManager.load(program);
+				  _StdOut.putText("Process ID: " + pid);
 			  }
     }//end Load
 
@@ -398,7 +399,7 @@ module TSOS {
             } else {
                 document.getElementById('statusBox').innerHTML = "Usage: status <string>  Please supply a string.";
             }
-        }
+        }//end shellStatus
 
     }
 }

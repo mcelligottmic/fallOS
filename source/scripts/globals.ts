@@ -46,6 +46,10 @@ var _KernelInterruptQueue = null;
 var _KernelBuffers: any[] = null;
 var _KernelInputQueue = null;
 
+// Memory and Process control
+var _ProcessManager: TSOS.ProcessManager;
+var _MemoryManager: TSOS.MemoryManager;
+
 // Standard input and output
 var _StdIn  = null;
 var _StdOut = null;

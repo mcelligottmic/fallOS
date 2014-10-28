@@ -1,7 +1,7 @@
 ///<reference path="../globals.ts" />
 
 /* ------------
-     mainMemory.ts
+     PCB.ts
 
      Requires global.ts.
 
@@ -14,22 +14,32 @@
 
 module TSOS {
 
-  export class mainMemory {
+  export class PCB {
     //properties
-    //main memory will be stored in bytes
-    public RAM = [];
-    public max = 256;
+    public PID;
+    public base;
+    public limit;
+    public xRegister;
+    public yRegister;
+    public zRegister;
+    public accumulator;
+    public PC;
+    public priority;
+    //maybe add in the current State of the process
+    //public State; //"new","ready","running","waiting", or "halted"
 
-    constructor( num : number) {
-      this.max = num;
+    constructor() {
+
     }
 
-    //fills main memory with 00 at each location
     public init(): void {
-      for (var i = 0; i < this.max; i++){
-        //RAM is an array of type string that will represent main memory
-        this.RAM[i] = "00";
-      }
+      this.base = 0;
+      this.limit = 0;
+      this.xRegister = 0;
+      this.yRegister = 0;
+      this.zRegister = 0;
+      this.accumulator;
+      this.PC = 0;
     }//end init
 
   }

@@ -42,6 +42,10 @@ var _KernelInterruptQueue = null;
 var _KernelBuffers = null;
 var _KernelInputQueue = null;
 
+// Memory and Process control
+var _ProcessManager;
+var _MemoryManager;
+
 // Standard input and output
 var _StdIn = null;
 var _StdOut = null;

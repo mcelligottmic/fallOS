@@ -38,6 +38,8 @@ module TSOS {
             this.krnTrace(_krnKeyboardDriver.status);
 
             //
+            _ProcessManager = new ProcessManager();
+            _MemoryManager = new MemoryManager();
             // ... more?
             //
 
