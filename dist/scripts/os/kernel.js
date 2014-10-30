@@ -160,6 +160,7 @@ var TSOS;
             }
         };
 
+        // computer run into some error
         Kernel.prototype.krnTrapError = function (msg) {
             TSOS.Control.hostLog("OS ERROR - TRAP: " + msg);
 
