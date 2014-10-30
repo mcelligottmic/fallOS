@@ -37,11 +37,6 @@ var TSOS;
             // Do the real work here. Be sure to set this.isExecuting appropriately.
         };
 
-        //convert hex to memory location
-        Cpu.prototype.memoryToInt = function (first, second) {
-            return parseInt((second + first), 16);
-        };
-
         //get element from memory given an address
         Cpu.prototype.dataAt = function (location) {
             //check to see if we are out of bounds with memory access
@@ -59,74 +54,87 @@ var TSOS;
             this.PC = (parseInt(this.PC, 16) + num).toString(16);
         };
 
+        //gets the next byte and returns its Int value
+        Cpu.prototype.getNextByte = function () {
+            this.addToPC(1);
+            return parseInt(this.dataAt(parseInt(this.PC, 16)), 16);
+        };
+
+        //gets the next two memory locations and returns the equivalent int
+        Cpu.prototype.getNextAddress = function () {
+            var location1 = this.getNextByte().toString(16);
+            var location2 = this.getNextByte().toString(16);
+            return parseInt((location2 + location1), 16);
+        };
+
         //LDA A9
         //Load the accumulator with a constant
         Cpu.prototype.LDAc = function () {
-            var constant = this.dataAt(parseInt(this.PC, 16) + 1);
+            var constant = this.getNextByte().toString(16);
             this.Acc = constant;
-            this.addToPC(3);
+            this.addToPC(1);
         };
 
         //LDA AD
         //Load the accumulator from memory
         Cpu.prototype.LDAm = function () {
-            var address = this.memoryToInt(this.dataAt(parseInt(this.PC, 16) + 1), this.dataAt(parseInt(this.PC, 16) + 2));
-            var constant = this.dataAt(address);
-            this.Acc = constant;
-            this.addToPC(3);
+            var address = this.getNextAddress();
+            this.Acc = this.dataAt(address);
+            this.addToPC(1);
         };
 
         //STA 8D
         //Store the accumulator in memory
         Cpu.prototype.STAm = function () {
-            var address = this.memoryToInt(this.dataAt(parseInt(this.PC, 16) + 1), this.dataAt(parseInt(this.PC, 16) + 2));
+            var address = this.getNextAddress();
 
             //store in memory
             this.storeAt(address, this.Acc);
-            this.addToPC(3);
+            this.addToPC(1);
         };
 
         //ADC 6D
         //Add with carry
         //Adds contents of an address to the contents of the accumulator and keeps the result in the accumulator
         Cpu.prototype.ADC = function () {
-            var value = this.memoryToInt(this.dataAt(parseInt(this.PC, 16) + 1), this.dataAt(parseInt(this.PC, 16) + 2));
+            var address = this.getNextAddress();
+            var value = parseInt(this.dataAt(address), 16);
             this.Acc = (parseInt(this.Acc, 16) + value).toString(16);
-            this.addToPC(3);
+            this.addToPC(1);
         };
 
         //LDX A2
         //Load the X register with a constant
         Cpu.prototype.LDXc = function () {
-            this.Xreg = this.dataAt(parseInt(this.PC, 16) + 1);
-            this.addToPC(2);
+            this.Xreg = this.getNextByte().toString(16);
+            this.addToPC(1);
         };
 
         //LDX AE
         //Load the X register from memory
         Cpu.prototype.LDXm = function () {
-            this.Xreg = (this.memoryToInt(this.dataAt(parseInt(this.PC, 16) + 1), this.dataAt(parseInt(this.PC, 16) + 2))).toString(16);
+            this.Xreg = this.getNextAddress().toString(16);
             this.addToPC(3);
         };
 
         //LDY A0
         //Load the Y register from a constant
         Cpu.prototype.LDYc = function () {
-            this.Yreg = this.dataAt(parseInt(this.PC, 16) + 1);
-            this.addToPC(2);
+            this.Yreg = this.getNextByte().toString(16);
+            this.addToPC(1);
         };
 
         //LDY AC
         //Load the Y register from memory
         Cpu.prototype.LDYm = function () {
-            this.Yreg = (this.memoryToInt(this.dataAt(parseInt(this.PC, 16) + 1), this.dataAt(parseInt(this.PC, 16) + 2))).toString(16);
-            this.addToPC(3);
+            this.Yreg = this.getNextAddress().toString(16);
+            this.addToPC(1);
         };
 
         //NOP EA
         //No Operation
         Cpu.prototype.NOP = function () {
-            //...I know a guy who would be upset with the waste cycle
+            //...I know a guy who would be upset with the wasted cycle
             this.addToPC(1);
         };
 
@@ -134,6 +142,41 @@ var TSOS;
         //Break (which is really a system call)
         Cpu.prototype.BRK = function () {
             //figure out what to do here <----
+            this.addToPC(1);
+        };
+
+        Cpu.prototype.CPX = function () {
+            var address = this.getNextAddress();
+            var value = parseInt(this.dataAt(address), 16);
+            if (value == parseInt(this.Xreg)) {
+                this.Zflag = "00";
+            }
+            this.addToPC(1);
+        };
+
+        //BNE D0
+        //Branch n bytes if Z flag = 0
+        Cpu.prototype.BNE = function () {
+            if (this.Zflag == "00") {
+                //branch
+                this.addToPC(parseInt(this.dataAt(parseInt(this.PC, 16))));
+            }
+            this.addToPC(1);
+        };
+
+        //INC EE
+        //Increment the value of a byte
+        Cpu.prototype.INC = function () {
+            var address = this.getNextAddress();
+            this.storeAt(address, (parseInt(this.dataAt(address)) + 1).toString(16));
+            this.addToPC(1);
+        };
+
+        //SYS FF
+        //System Call
+        Cpu.prototype.SYS = function () {
+            //gotta read up on this
+            //_KernelInterruptQueue.enqueue(new Interrupt())
             this.addToPC(1);
         };
         return Cpu;
