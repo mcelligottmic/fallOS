@@ -15,7 +15,7 @@ module TSOS {
         //
         // OS Startup and Shutdown Routines
         //
-        public krnBootstrap() {      // Page 8. {
+        public krnBootstrap() {      // Page 8.
             Control.hostLog("bootstrap", "host");  // Use hostLog because we ALWAYS want this, even if _Trace is off.
 
             // Initialize our global queues.
@@ -169,13 +169,13 @@ module TSOS {
              }
         }
 
-        // computer run into some error
+        // computer ran into some error
         public krnTrapError(msg) {
           Control.hostLog("OS ERROR - TRAP: " + msg);
           // TODO: Display error on console, perhaps in some sort of colored screen. (Perhaps blue?)
 			    _DrawingContext.fillStyle="Blue";
 			    _DrawingContext.fillRect(0, 0 , _Canvas.width, _Canvas.height);
-			    _StdOut.putText("Your PC ran into a problem that it couldn't handle and is now restarting...");
+			    _StdOut.putText("Your PC ran into a problem that it couldn't handle");
 			    TSOS.Control.hostBtnHaltOS_click(this);
           this.krnShutdown();
         }
