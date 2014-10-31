@@ -17,6 +17,7 @@ var TSOS;
         ProcessManager.prototype.load = function (process) {
             this.currentPid++;
             this.processes[this.currentPid] = new TSOS.PCB();
+            this.processes[this.currentPid].pid = this.currentPid;
             _MemoryManager.load(process, this.currentPid);
             return this.currentPid;
         };

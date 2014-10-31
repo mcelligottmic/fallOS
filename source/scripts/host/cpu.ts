@@ -43,6 +43,55 @@ module TSOS {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
+            //get next instruction
+            var instruction = this.getNextByte();
+            switch(instruction) {
+            case "A9":
+              this.LDAc();
+              break;
+            case "AD":
+              this.LDAm();
+              break;
+            case "8D":
+              this.STA();
+              break;
+            case "6D":
+              this.ADC();
+              break;
+            case "A2":
+              this.LDXc();
+              break;
+            case "AE":
+              this.LDXm();
+              break;
+            case "A0":
+              this.LDYc();
+              break;
+            case "AC":
+              this.LDYm();
+              break;
+            case "EA":
+              this.NOP();
+              break;
+            case "00":
+              this.BRK();
+              break;
+            case "EC":
+              this.CPX();
+              break;
+            case "D0":
+              this.BNE();
+              break;
+            case "EE":
+              this.INC();
+              break;
+            case "FF":
+              this.SYS();
+              break;
+            }
+            //update the PCB
+            this.currentProcess.update();
+            //draw to screen
         }
 
         //CPU starts working on a process
@@ -74,29 +123,34 @@ module TSOS {
 
         //Increase the PC by a set amount
         public addToPC(num: number): void {
-          this.PC =(parseInt(this.PC, 16) + num).toString(16);
-          //do we got back to zero at end of program?
+          this.PC = (parseInt(this.PC, 16) + num).toString(16).toUpperCase();
+          //do we go back to zero at end of program?
         }
 
-        //gets the next byte and returns its Int value
-        public getNextByte(): number {
+        //gets the next byte and returns it as a string
+        public getNextByte(): string {
+          var byte = this.dataAt(parseInt(this.PC, 16));
           this.addToPC(1);
-          return parseInt(this.dataAt(parseInt(this.PC, 16)), 16);
+          return byte.toUpperCase();
+        }
+
+        //converts a byte to an Int
+        public byteToInt(byte: string): number {
+          return parseInt(byte, 16);
         }
 
         //gets the next two memory locations and returns the equivalent int
         public getNextAddress(): number {
-          var location1 = this.getNextByte().toString(16);
-          var location2 = this.getNextByte().toString(16);
+          var location1 = this.getNextByte();
+          var location2 = this.getNextByte();
           return parseInt((location2 + location1), 16);
         }
 
         //LDA A9
         //Load the accumulator with a constant
         public LDAc(): void {
-          var constant = this.getNextByte().toString(16);
+          var constant = this.getNextByte();
           this.Acc = constant;
-          this.addToPC(1);
         }
 
         //LDA AD
@@ -104,16 +158,14 @@ module TSOS {
         public LDAm(): void {
           var address = this.getNextAddress();
           this.Acc = this.dataAt(address);
-          this.addToPC(1);
         }
 
         //STA 8D
         //Store the accumulator in memory
-        public STAm(): void {
+        public STA(): void {
           var address = this.getNextAddress();
           //store in memory
           this.storeAt(address, this.Acc);
-          this.addToPC(1);
         }
 
         //ADC 6D
@@ -122,50 +174,44 @@ module TSOS {
         public ADC(): void {
           var address = this.getNextAddress();
           var value = parseInt(this.dataAt(address), 16);
-          this.Acc = (parseInt(this.Acc, 16) + value).toString(16);
-          this.addToPC(1);
+          this.Acc = (parseInt(this.Acc, 16) + value).toString(16).toUpperCase();
         }
 
         //LDX A2
         //Load the X register with a constant
         public LDXc(): void {
-          this.Xreg = this.getNextByte().toString(16);
-          this.addToPC(1);
+          this.Xreg = this.getNextByte()
         }
 
         //LDX AE
         //Load the X register from memory
         public LDXm(): void {
-          this.Xreg = this.getNextAddress().toString(16);
-          this.addToPC(1);
+          this.Xreg = this.getNextAddress().toString(16).toUpperCase();
         }
 
         //LDY A0
         //Load the Y register from a constant
         public LDYc(): void {
-          this.Yreg = this.getNextByte().toString(16);
-          this.addToPC(1);
+          this.Yreg = this.getNextByte()
         }
 
         //LDY AC
         //Load the Y register from memory
         public LDYm(): void {
-          this.Yreg = this.getNextAddress().toString(16);
-          this.addToPC(1);
+          this.Yreg = this.getNextAddress().toString(16).toUpperCase();
         }
 
         //NOP EA
         //No Operation
         public NOP(): void {
           //...I know a guy who would be upset with the wasted cycle
-          this.addToPC(1);
         }
 
         //BRK 00
         //Break (which is really a system call)
         public BRK(): void {
-          //figure out what to do here <----
-          this.addToPC(1);
+          //Exit the process
+          _KernelInterruptQueue.enqueue(new Interrupt(CPU_BREAK_IRQ, []));
         }
 
         //CPX EC
@@ -177,7 +223,6 @@ module TSOS {
           if (value == parseInt(this.Xreg) ) {
             this.Zflag = "00";
           }
-          this.addToPC(1);
         }
 
         //BNE D0
@@ -187,23 +232,20 @@ module TSOS {
             //branch
             this.addToPC(parseInt(this.dataAt(parseInt(this.PC, 16))));
           }
-          this.addToPC(1);
         }
 
         //INC EE
         //Increment the value of a byte
         public INC(): void {
           var address = this.getNextAddress();
-          this.storeAt(address, (parseInt(this.dataAt(address)) + 1).toString(16));
-          this.addToPC(1);
+          this.storeAt(address, (parseInt(this.dataAt(address)) + 1).toString(16).toUpperCase());
         }
 
         //SYS FF
         //System Call
         public SYS(): void {
           //gotta read up on this
-          //_KernelInterruptQueue.enqueue(new Interrupt())
-          this.addToPC(1);
+          //_KernelInterruptQueue.enqueue(new Interrupt(SYS_CALL_IRQ, []));
         }
     }
 }

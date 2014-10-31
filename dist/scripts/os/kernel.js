@@ -120,6 +120,9 @@ var TSOS;
                 case INVAILD_MEMORY_ACCESS_IRQ:
                     this.krnMemoryAccess(params);
                     break;
+                case CPU_BREAK_IRQ:
+                    this.krnBreak(params);
+                    break;
                 case SYSTEM_CALL_IRQ:
                     break;
                 default:
@@ -142,6 +145,17 @@ var TSOS;
             //message the user
             _StdOut.putText("INVAILID MEMORY ACCESS...PROGRAM TERMINATED");
             //it would be helpful to add where the error is
+        };
+
+        Kernel.prototype.krnBreak = function (params) {
+            //save all data on cpu to the process control block
+            //_CPU.currentProcess.update();
+            //end the process
+            _MemoryManager.freeSpace[_CPU.currentProcess.pid] = true;
+            _StdOut.putText("Process ID: " + _CPU.currentProcess.pid + " complete");
+            _CPU.stop();
+            //_CPU.currentProcess.state = halted or terminated?
+            //TODO context switching for project 3
         };
 
         //

@@ -19,6 +19,8 @@ module TSOS {
       //the last position filled
       public lastLoad;
       public memory;
+      //true if block is ready for use
+      public freeSpace = [];
 
       constructor() {
         this.init();
@@ -28,6 +30,7 @@ module TSOS {
         this.loadIndex = 0;
         this.lastLoad = 0;
         this.memory = new mainMemory(256);
+        this.freeSpace[0] = true;
       }//end init
 
       public load( program : string, pid : number): void {
@@ -47,9 +50,15 @@ module TSOS {
           this.memory.RAM[this.lastLoad] = data;
           this.lastLoad++;
         }
-      //store base and limit into PCB
-      _ProcessManager.processes[pid].base = this.loadIndex;
-      _ProcessManager.processes[pid].limit = this.loadIndex + this.BLOCKSIZE;
+      //store info into PCB
+      _ProcessManager.processes[pid].base = this.loadIndex.toString(16);
+      _ProcessManager.processes[pid].limit = (this.loadIndex + this.BLOCKSIZE).toString(16);
+      _ProcessManager.processes[pid].xRegister = "00";
+      _ProcessManager.processes[pid].yRegister = "00";
+      _ProcessManager.processes[pid].zRegister = "00";
+      _ProcessManager.processes[pid].accumulator = "0";
+      _ProcessManager.processes[pid].PC = this.loadIndex.toString(16);
+      this.freeSpace[pid] = false;
       }
 
       //fills main memory with 00 at each location
@@ -65,8 +74,8 @@ module TSOS {
       public read(location: number, pcb: PCB): string {
         //check to see if we are out of bounds with memory access
         //check PCB for base and limit
-        var base = pcb.base;
-        var limit = pcb.limit;
+        var base = parseInt(pcb.base, 16);
+        var limit = parseInt(pcb.limit, 16);
         //if location is within base and limit
         if (location >= base && location < limit) {
           return this.memory.RAM[location];

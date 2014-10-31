@@ -12,12 +12,15 @@ var TSOS;
             this.BLOCKSIZE = 256;
             //need to figure out how to force integer division
             this.NUM_OF_BLOCKS = this.MAXRAM / this.BLOCKSIZE;
+            //true if block is ready for use
+            this.freeSpace = [];
             this.init();
         }
         MemoryManager.prototype.init = function () {
             this.loadIndex = 0;
             this.lastLoad = 0;
             this.memory = new TSOS.mainMemory(256);
+            this.freeSpace[0] = true;
         };
 
         MemoryManager.prototype.load = function (program, pid) {
@@ -39,9 +42,15 @@ var TSOS;
                 this.lastLoad++;
             }
 
-            //store base and limit into PCB
-            _ProcessManager.processes[pid].base = this.loadIndex;
-            _ProcessManager.processes[pid].limit = this.loadIndex + this.BLOCKSIZE;
+            //store info into PCB
+            _ProcessManager.processes[pid].base = this.loadIndex.toString(16);
+            _ProcessManager.processes[pid].limit = (this.loadIndex + this.BLOCKSIZE).toString(16);
+            _ProcessManager.processes[pid].xRegister = "00";
+            _ProcessManager.processes[pid].yRegister = "00";
+            _ProcessManager.processes[pid].zRegister = "00";
+            _ProcessManager.processes[pid].accumulator = "0";
+            _ProcessManager.processes[pid].PC = this.loadIndex.toString(16);
+            this.freeSpace[pid] = false;
         };
 
         //fills main memory with 00 at each location
@@ -57,8 +66,8 @@ var TSOS;
         MemoryManager.prototype.read = function (location, pcb) {
             //check to see if we are out of bounds with memory access
             //check PCB for base and limit
-            var base = pcb.base;
-            var limit = pcb.limit;
+            var base = parseInt(pcb.base, 16);
+            var limit = parseInt(pcb.limit, 16);
 
             //if location is within base and limit
             if (location >= base && location < limit) {

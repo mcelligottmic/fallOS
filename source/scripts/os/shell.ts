@@ -397,7 +397,8 @@ module TSOS {
 
     //runs the program that is loaded
     public shellRun(pid: number) {
-      //run the program 
+      //run the program
+      _CPU.start(_ProcessManager.processes[pid]);
     }//end Load
 
 		public shellStatus(args) {

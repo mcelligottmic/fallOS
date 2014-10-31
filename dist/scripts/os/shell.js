@@ -371,6 +371,7 @@ var TSOS;
         //runs the program that is loaded
         Shell.prototype.shellRun = function (pid) {
             //run the program
+            _CPU.start(_ProcessManager.processes[pid]);
         };
 
         Shell.prototype.shellStatus = function (args) {

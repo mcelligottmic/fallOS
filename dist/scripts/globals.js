@@ -19,7 +19,8 @@ var TIMER_IRQ = 0;
 // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
 var KEYBOARD_IRQ = 1;
 var INVAILD_MEMORY_ACCESS_IRQ = 2;
-var SYSTEM_CALL_IRQ = 3;
+var CPU_BREAK_IRQ = 3;
+var SYSTEM_CALL_IRQ = 4;
 
 //
 // Global Variables

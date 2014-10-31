@@ -24,6 +24,7 @@ module TSOS {
     public load(process: string): number {
       this.currentPid++;
       this.processes[this.currentPid] = new PCB();
+      this.processes[this.currentPid].pid = this.currentPid;
       _MemoryManager.load(process, this.currentPid);
       return this.currentPid;
     }

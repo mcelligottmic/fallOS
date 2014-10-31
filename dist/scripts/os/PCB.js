@@ -14,15 +14,23 @@ var TSOS;
         //maybe add in the current State of the process
         //public State; //"new","ready","running","waiting", or "halted"
         function PCB() {
+            this.base = "00";
+            this.limit = "00";
+            this.xRegister = "00";
+            this.yRegister = "00";
+            this.zRegister = "00";
+            this.accumulator = "00";
+            this.PC = "00";
         }
         PCB.prototype.init = function () {
-            this.base = 0;
-            this.limit = 0;
-            this.xRegister = 0;
-            this.yRegister = 0;
-            this.zRegister = 0;
-            this.accumulator;
-            this.PC = 0;
+            this.pid = "00";
+            this.base = "00";
+            this.limit = "00";
+            this.xRegister = "00";
+            this.yRegister = "00";
+            this.zRegister = "00";
+            this.accumulator = "00";
+            this.PC = "00";
         };
 
         PCB.prototype.update = function () {

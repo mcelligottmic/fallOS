@@ -42,7 +42,7 @@ module TSOS {
                 }
                 // TODO: Check for caps-lock and handle as shifted if so.
                 _KernelInputQueue.enqueue(chr);
-				
+
 			//Digits keys and some punctuation
             } else if ( (keyCode >= 48) && (keyCode <= 57) ||
 						(keyCode == 59)	|| (keyCode == 61) ) {
@@ -53,7 +53,7 @@ module TSOS {
 						chr = String.fromCharCode( charShift[keyCode-48] );
 					}
 				_KernelInputQueue.enqueue(chr);
-				
+
 			//other punctuation
             } else if ( (keyCode == 173)						||
 						(keyCode == 188)						||
@@ -64,7 +64,7 @@ module TSOS {
 						(keyCode == 220)						||
 						(keyCode == 221)						||
 						(keyCode == 222) ) {
-				
+
 				switch (keyCode) {
 					case 173:
 						chr = String.fromCharCode(45);
@@ -113,7 +113,7 @@ module TSOS {
 						break;
 				}
                 _KernelInputQueue.enqueue(chr);
-				
+
             } else if ( (keyCode == 32)                     ||   // space
 						(keyCode == 8)						||	 // backspace
 						(keyCode == 9)						||	 // tab
