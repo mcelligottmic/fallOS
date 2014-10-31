@@ -12,11 +12,13 @@ var TSOS;
 
         //update CPU
         Display.prototype.updateCPU = function () {
-            document.getElementById("PC").innerHTML = _CPU.PC;
-            document.getElementById("Acc").innerHTML = _CPU.Acc;
-            document.getElementById("Xreg").innerHTML = _CPU.Xreg;
-            document.getElementById("Yreg").innerHTML = _CPU.Yreg;
-            document.getElementById("Zreg").innerHTML = _CPU.Zflag;
+            //  var table = <HTMLTable> document.getElementById("CPUStatus");
+            //table.rows[0].deleteCell(0);
+            document.getElementById("PC").childNodes[0] = document.createTextNode(_CPU.PC);
+            document.getElementById("Acc").childNodes[0] = document.createTextNode(_CPU.Acc);
+            document.getElementById("Xreg").childNodes[0] = document.createTextNode(_CPU.Xreg);
+            document.getElementById("Yreg").childNodes[0] = document.createTextNode(_CPU.Yreg);
+            document.getElementById("Zreg").childNodes[0] = document.createTextNode(_CPU.Zflag);
         };
         return Display;
     })();

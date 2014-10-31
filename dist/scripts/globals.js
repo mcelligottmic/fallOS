@@ -45,6 +45,9 @@ var _KernelInterruptQueue = null;
 var _KernelBuffers = null;
 var _KernelInputQueue = null;
 
+// A Library for all System Calls
+var _SystemCallLibrary;
+
 // Memory and Process control
 var _ProcessManager;
 var _MemoryManager;
@@ -52,6 +55,9 @@ var _MemoryManager;
 // Standard input and output
 var _StdIn = null;
 var _StdOut = null;
+
+// Display CPU, memory, and other things
+var _Display;
 
 // UI
 var _Console;

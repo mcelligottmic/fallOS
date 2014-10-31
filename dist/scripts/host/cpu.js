@@ -87,7 +87,6 @@ var TSOS;
 
             //update the PCB
             this.currentProcess.update();
-            //draw to screen
         };
 
         //CPU starts working on a process
@@ -233,8 +232,7 @@ var TSOS;
         //SYS FF
         //System Call
         Cpu.prototype.SYS = function () {
-            //gotta read up on this
-            //_KernelInterruptQueue.enqueue(new Interrupt(SYS_CALL_IRQ, []));
+            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(SYSTEM_CALL_IRQ, []));
         };
         return Cpu;
     })();

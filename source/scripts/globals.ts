@@ -50,6 +50,9 @@ var _KernelInterruptQueue = null;
 var _KernelBuffers: any[] = null;
 var _KernelInputQueue = null;
 
+// A Library for all System Calls
+var _SystemCallLibrary: TSOS.SystemCallLibrary;
+
 // Memory and Process control
 var _ProcessManager: TSOS.ProcessManager;
 var _MemoryManager: TSOS.MemoryManager;
@@ -57,6 +60,9 @@ var _MemoryManager: TSOS.MemoryManager;
 // Standard input and output
 var _StdIn  = null;
 var _StdOut = null;
+
+// Display CPU, memory, and other things
+var _Display: TSOS.Display;
 
 // UI
 var _Console: TSOS.Console;

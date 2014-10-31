@@ -86,6 +86,8 @@ module TSOS {
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
             } else if (_CPU.isExecuting) { // If there are no interrupts then run one CPU cycle if there is anything being processed. {
                 _CPU.cycle();
+                //_Display.updatePCB(this.currentProcess.pid);
+                _Display.updateCPU();
             } else {                      // If there are no interrupts and there is nothing being executed then just be idle. {
                 this.krnTrace("Idle");
             }
@@ -128,10 +130,10 @@ module TSOS {
                     this.krnMemoryAccess(params);
                     break;
                 case CPU_BREAK_IRQ:
-                    this.krnBreak(params);
+                    _SystemCallLibrary.krnBreak(params);
                     break;
                 case SYSTEM_CALL_IRQ:
-                    //do stuff
+                    _SystemCallLibrary.krnSysCall(params);
                     break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
@@ -151,17 +153,6 @@ module TSOS {
           //message the user
           _StdOut.putText("INVAILID MEMORY ACCESS...PROGRAM TERMINATED");
           //it would be helpful to add where the error is
-        }
-
-        public krnBreak(params) {
-          //save all data on cpu to the process control block
-          //_CPU.currentProcess.update();
-          //end the process
-          _MemoryManager.freeSpace[_CPU.currentProcess.pid] = true;
-          _StdOut.putText("Process ID: " + _CPU.currentProcess.pid + " complete");
-          _CPU.stop();
-          //_CPU.currentProcess.state = halted or terminated?
-          //TODO context switching for project 3
         }
 
         //

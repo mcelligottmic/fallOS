@@ -91,7 +91,6 @@ module TSOS {
             }
             //update the PCB
             this.currentProcess.update();
-            //draw to screen
         }
 
         //CPU starts working on a process
@@ -244,8 +243,7 @@ module TSOS {
         //SYS FF
         //System Call
         public SYS(): void {
-          //gotta read up on this
-          //_KernelInterruptQueue.enqueue(new Interrupt(SYS_CALL_IRQ, []));
+          _KernelInterruptQueue.enqueue(new Interrupt(SYSTEM_CALL_IRQ, []));
         }
     }
 }
