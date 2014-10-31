@@ -14,7 +14,9 @@ module TSOS {
       public BLOCKSIZE = 256;
       //need to figure out how to force integer division
       public NUM_OF_BLOCKS = this.MAXRAM / this.BLOCKSIZE;
+      //used to find where to start loading
       public loadIndex;
+      //the last position filled
       public lastLoad;
       public memory;
 
@@ -58,6 +60,36 @@ module TSOS {
         }
       this.lastLoad = base;
       }//end method
+
+      //check access to read from memory
+      public read(location: number, pcb: PCB): string {
+        //check to see if we are out of bounds with memory access
+        //check PCB for base and limit
+        var base = pcb.base;
+        var limit = pcb.limit;
+        //if location is within base and limit
+        if (location >= base && location < limit) {
+          return this.memory.RAM[location];
+        } else {
+          //error
+          _KernelInterruptQueue.enqueue(INVAILD_MEMORY_ACCESS_IRQ);
+        }
+      }
+
+      //controll accress to write to memory
+      public write(location: number, data: string, pcb: PCB ): void {
+        //check to see if we are out of bounds with memory access
+        //check PCB for base and limit
+        var base = pcb.base;
+        var limit = pcb.limit;
+        //if location is within base and limit
+        if (location >= base && location < limit) {
+          this.memory.RAM[location] = data;
+        } else {
+          //error
+          _KernelInterruptQueue.enqueue(INVAILD_MEMORY_ACCESS_IRQ);
+        }
+      }
 
     }
   }

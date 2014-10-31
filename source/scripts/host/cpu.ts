@@ -19,7 +19,8 @@ module TSOS {
 
     export class Cpu {
 
-        constructor(public PC: string = "00",
+        constructor(public currentProcess: PCB = null,
+                    public PC: string = "00",
                     public Acc: string = "00",
                     public Xreg: string = "00",
                     public Yreg: string = "00",
@@ -29,12 +30,13 @@ module TSOS {
         }
 
         public init(): void {
-            this.PC = "00",
-            this.Acc = "00",
-            this.Xreg = "00",
-            this.Yreg = "00",
-            this.Zflag = "00",
-            this.isExecuting = false;
+          this.currentProcess = null,
+          this.PC = "00",
+          this.Acc = "00",
+          this.Xreg = "00",
+          this.Yreg = "00",
+          this.Zflag = "00",
+          this.isExecuting = false;
         }
 
         public cycle(): void {
@@ -43,21 +45,37 @@ module TSOS {
             // Do the real work here. Be sure to set this.isExecuting appropriately.
         }
 
+        //CPU starts working on a process
+        public start(pcb: PCB): void {
+          this.currentProcess = pcb;
+          this.PC = pcb.PC,
+          this.Acc = pcb.accumulator,
+          this.Xreg = pcb.xRegister,
+          this.Yreg = pcb.yRegister,
+          this.Zflag = pcb.zRegister,
+          this.isExecuting = true;
+        }
+
+        //CPU stops working on a process
+        public stop(): void {
+          this.init();
+        }
+
         //get element from memory given an address
-        public dataAt(location: number): string{
-          //check to see if we are out of bounds with memory access
-          return _MemoryManager.memory.RAM[location];
+        public dataAt(location: number): string {
+          return _MemoryManager.read(location, this.currentProcess);
         }
 
         //store element to memory given an address and an element
-        public storeAt(loaction: number, data: string): void {
+        public storeAt(location: number, data: string): void {
           //check to see if we have access
-          _MemoryManager.memory.RAM[location] = data;
+          _MemoryManager.write(location, data, this.currentProcess);
         }
 
         //Increase the PC by a set amount
         public addToPC(num: number): void {
-          this.PC = (parseInt(this.PC, 16) + num).toString(16);
+          this.PC =(parseInt(this.PC, 16) + num).toString(16);
+          //do we got back to zero at end of program?
         }
 
         //gets the next byte and returns its Int value
@@ -119,7 +137,7 @@ module TSOS {
         //Load the X register from memory
         public LDXm(): void {
           this.Xreg = this.getNextAddress().toString(16);
-          this.addToPC(3);
+          this.addToPC(1);
         }
 
         //LDY A0

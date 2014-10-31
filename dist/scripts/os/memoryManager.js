@@ -52,6 +52,38 @@ var TSOS;
             }
             this.lastLoad = base;
         };
+
+        //check access to read from memory
+        MemoryManager.prototype.read = function (location, pcb) {
+            //check to see if we are out of bounds with memory access
+            //check PCB for base and limit
+            var base = pcb.base;
+            var limit = pcb.limit;
+
+            //if location is within base and limit
+            if (location >= base && location < limit) {
+                return this.memory.RAM[location];
+            } else {
+                //error
+                _KernelInterruptQueue.enqueue(INVAILD_MEMORY_ACCESS_IRQ);
+            }
+        };
+
+        //controll accress to write to memory
+        MemoryManager.prototype.write = function (location, data, pcb) {
+            //check to see if we are out of bounds with memory access
+            //check PCB for base and limit
+            var base = pcb.base;
+            var limit = pcb.limit;
+
+            //if location is within base and limit
+            if (location >= base && location < limit) {
+                this.memory.RAM[location] = data;
+            } else {
+                //error
+                _KernelInterruptQueue.enqueue(INVAILD_MEMORY_ACCESS_IRQ);
+            }
+        };
         return MemoryManager;
     })();
     TSOS.MemoryManager = MemoryManager;

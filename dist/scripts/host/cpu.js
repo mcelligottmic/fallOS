@@ -13,13 +13,15 @@ Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 
 var TSOS;
 (function (TSOS) {
     var Cpu = (function () {
-        function Cpu(PC, Acc, Xreg, Yreg, Zflag, isExecuting) {
+        function Cpu(currentProcess, PC, Acc, Xreg, Yreg, Zflag, isExecuting) {
+            if (typeof currentProcess === "undefined") { currentProcess = null; }
             if (typeof PC === "undefined") { PC = "00"; }
             if (typeof Acc === "undefined") { Acc = "00"; }
             if (typeof Xreg === "undefined") { Xreg = "00"; }
             if (typeof Yreg === "undefined") { Yreg = "00"; }
             if (typeof Zflag === "undefined") { Zflag = "00"; }
             if (typeof isExecuting === "undefined") { isExecuting = false; }
+            this.currentProcess = currentProcess;
             this.PC = PC;
             this.Acc = Acc;
             this.Xreg = Xreg;
@@ -28,7 +30,7 @@ var TSOS;
             this.isExecuting = isExecuting;
         }
         Cpu.prototype.init = function () {
-            this.PC = "00", this.Acc = "00", this.Xreg = "00", this.Yreg = "00", this.Zflag = "00", this.isExecuting = false;
+            this.currentProcess = null, this.PC = "00", this.Acc = "00", this.Xreg = "00", this.Yreg = "00", this.Zflag = "00", this.isExecuting = false;
         };
 
         Cpu.prototype.cycle = function () {
@@ -37,21 +39,32 @@ var TSOS;
             // Do the real work here. Be sure to set this.isExecuting appropriately.
         };
 
+        //CPU starts working on a process
+        Cpu.prototype.start = function (pcb) {
+            this.currentProcess = pcb;
+            this.PC = pcb.PC, this.Acc = pcb.accumulator, this.Xreg = pcb.xRegister, this.Yreg = pcb.yRegister, this.Zflag = pcb.zRegister, this.isExecuting = true;
+        };
+
+        //CPU stops working on a process
+        Cpu.prototype.stop = function () {
+            this.init();
+        };
+
         //get element from memory given an address
         Cpu.prototype.dataAt = function (location) {
-            //check to see if we are out of bounds with memory access
-            return _MemoryManager.memory.RAM[location];
+            return _MemoryManager.read(location, this.currentProcess);
         };
 
         //store element to memory given an address and an element
-        Cpu.prototype.storeAt = function (loaction, data) {
+        Cpu.prototype.storeAt = function (location, data) {
             //check to see if we have access
-            _MemoryManager.memory.RAM[location] = data;
+            _MemoryManager.write(location, data, this.currentProcess);
         };
 
         //Increase the PC by a set amount
         Cpu.prototype.addToPC = function (num) {
             this.PC = (parseInt(this.PC, 16) + num).toString(16);
+            //do we got back to zero at end of program?
         };
 
         //gets the next byte and returns its Int value
@@ -114,7 +127,7 @@ var TSOS;
         //Load the X register from memory
         Cpu.prototype.LDXm = function () {
             this.Xreg = this.getNextAddress().toString(16);
-            this.addToPC(3);
+            this.addToPC(1);
         };
 
         //LDY A0

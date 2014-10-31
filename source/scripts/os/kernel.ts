@@ -124,6 +124,12 @@ module TSOS {
                     _krnKeyboardDriver.isr(params);   // Kernel mode device driver
                     _StdIn.handleInput();
                     break;
+                case INVAILD_MEMORY_ACCESS_IRQ:
+                    this.krnMemoryAccess(params);
+                    break;
+                case SYSTEM_CALL_IRQ:
+                    //do stuff
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }
@@ -132,6 +138,16 @@ module TSOS {
         public krnTimerISR() {
             // The built-in TIMER (not clock) Interrupt Service Routine (as opposed to an ISR coming from a device driver). {
             // Check multiprogramming parameters and enforce quanta here. Call the scheduler / context switch here if necessary.
+        }
+
+        public krnMemoryAccess(params) {
+          //save all data on cpu to the process control block
+          _CPU.currentProcess.update();
+          //end the process
+          _CPU.stop();
+          //message the user
+          _StdOut.putText("INVAILID MEMORY ACCESS...PROGRAM TERMINATED");
+          //it would be helpful to add where the error is
         }
 
         //

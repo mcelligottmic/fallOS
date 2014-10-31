@@ -42,6 +42,16 @@ module TSOS {
       this.PC = 0;
     }//end init
 
+    public update(): void {
+      this.xRegister = _CPU.Xreg;
+      this.yRegister = _CPU.Yreg;
+      this.zRegister = _CPU.Zflag;
+      this.accumulator = _CPU.Acc;
+      this.PC = _CPU.PC;
+      //get the current state
+      //this.isExecuting = true;
+    }
+
   }
 
 }//end module

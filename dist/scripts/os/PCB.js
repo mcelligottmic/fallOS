@@ -24,6 +24,16 @@ var TSOS;
             this.accumulator;
             this.PC = 0;
         };
+
+        PCB.prototype.update = function () {
+            this.xRegister = _CPU.Xreg;
+            this.yRegister = _CPU.Yreg;
+            this.zRegister = _CPU.Zflag;
+            this.accumulator = _CPU.Acc;
+            this.PC = _CPU.PC;
+            //get the current state
+            //this.isExecuting = true;
+        };
         return PCB;
     })();
     TSOS.PCB = PCB;
