@@ -15,7 +15,7 @@ module TSOS {
         //
         // OS Startup and Shutdown Routines
         //
-        public krnBootstrap() {      // Page 8. {
+        public krnBootstrap() {      // Page 8.
             Control.hostLog("bootstrap", "host");  // Use hostLog because we ALWAYS want this, even if _Trace is off.
 
             // Initialize our global queues.
@@ -38,6 +38,8 @@ module TSOS {
             this.krnTrace(_krnKeyboardDriver.status);
 
             //
+            _ProcessManager = new ProcessManager();
+            _MemoryManager = new MemoryManager();
             // ... more?
             //
 
@@ -84,6 +86,8 @@ module TSOS {
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
             } else if (_CPU.isExecuting) { // If there are no interrupts then run one CPU cycle if there is anything being processed. {
                 _CPU.cycle();
+                //_Display.updatePCB(this.currentProcess.pid);
+                _Display.updateCPU();
             } else {                      // If there are no interrupts and there is nothing being executed then just be idle. {
                 this.krnTrace("Idle");
             }
@@ -122,6 +126,16 @@ module TSOS {
                     _krnKeyboardDriver.isr(params);   // Kernel mode device driver
                     _StdIn.handleInput();
                     break;
+                case INVAILD_MEMORY_ACCESS_IRQ:
+                    this.krnMemoryAccess(params);
+                    break;
+                case CPU_BREAK_IRQ:
+                    //_SystemCallLibrary.krnBreak(params);
+                    this.krnBreak(params);
+                    break;
+                case SYSTEM_CALL_IRQ:
+                    this.krnSysCall(params);
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }
@@ -130,6 +144,44 @@ module TSOS {
         public krnTimerISR() {
             // The built-in TIMER (not clock) Interrupt Service Routine (as opposed to an ISR coming from a device driver). {
             // Check multiprogramming parameters and enforce quanta here. Call the scheduler / context switch here if necessary.
+        }
+
+        public krnMemoryAccess(params) {
+          //save all data on cpu to the process control block
+          _CPU.currentProcess.update();
+          //end the process
+          _CPU.stop();
+          //message the user
+          _StdOut.putText("INVAILID MEMORY ACCESS...PROGRAM TERMINATED");
+          //it would be helpful to add where the error is
+        }
+
+        public krnBreak(params) {
+          //save all data on cpu to the process control block
+          //_CPU.currentProcess.update();
+          //end the process
+          _MemoryManager.freeSpace[_CPU.currentProcess.pid] = true;
+          _StdOut.putText("Process ID: " + _CPU.currentProcess.pid + " complete");
+          _CPU.stop();
+          //_CPU.currentProcess.state = halted or terminated?
+          //TODO context switching for project 3
+        }
+
+        public krnSysCall(params) {
+          //if 1 in Xreg print y
+          if (_CPU.Xreg = "01") {
+            _StdOut.putText(_CPU.Yreg);
+            //if 2 print string starting at location yReg and ending at 00
+          } else if (_CPU.Xreg = "02") {
+            var byte = _MemoryManager.read(_CPU.byteToInt(_CPU.Yreg), _CPU.currentProcess);
+            var string = "";
+            while (byte != "00") {
+              string = string + byte;
+            }
+            _StdOut.putText(parseInt(string,16));
+          } else {
+            _StdOut.putText("INVALID PARAMETER FOR SYSTEM CALL");
+          }
         }
 
         //
@@ -167,14 +219,15 @@ module TSOS {
              }
         }
 
+        // computer ran into some error
         public krnTrapError(msg) {
-            Control.hostLog("OS ERROR - TRAP: " + msg);
-            // TODO: Display error on console, perhaps in some sort of colored screen. (Perhaps blue?)
-			_DrawingContext.fillStyle="Blue";
-			_DrawingContext.fillRect(0, 0 , _Canvas.width, _Canvas.height);
-			_StdOut.putText("Your PC ran into a problem that it couldn't handle and is now restarting...");
-			TSOS.Control.hostBtnHaltOS_click(this);
-            this.krnShutdown();
+          Control.hostLog("OS ERROR - TRAP: " + msg);
+          // TODO: Display error on console, perhaps in some sort of colored screen. (Perhaps blue?)
+			    _DrawingContext.fillStyle="Blue";
+			    _DrawingContext.fillRect(0, 0 , _Canvas.width, _Canvas.height);
+			    _StdOut.putText("Your PC ran into a problem that it couldn't handle");
+			    TSOS.Control.hostBtnHaltOS_click(this);
+          this.krnShutdown();
         }
     }
 }

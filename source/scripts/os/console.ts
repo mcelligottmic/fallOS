@@ -28,35 +28,6 @@ module TSOS {
 
         }
 
-		//scrolling the canvas
-		public scroll(): void {
-      var offset = _DefaultFontSize +
-                           _DrawingContext.fontDescent(this.currentFont,
-                             this.currentFontSize) +
-                           _FontHeightMargin
-			if (this.currentYPosition >= _Canvas.height -offset) {
-				var temp = _DrawingContext.getImageData(0, _DefaultFontSize +
-                   2*_FontHeightMargin, _Canvas.width, _Canvas.height - offset);
-				_DrawingContext.clearRect(0,0,_Canvas.width, _Canvas.height);
-				_DrawingContext.putImageData(temp,0,0);
-				this.currentYPosition -= offset;
-			}
-		}
-
-		//line wrap
-		public wrapLine(text): void {
-			var offset = _DrawingContext.measureText(this.currentFont,
-								this.currentFontSize,
-								//this.buffer.charAt(this.buffer.length-1);
-								text);
-			//if its going to be pasted the canvas move to next line and print
-			if (_Canvas.width <= this.currentXPosition + offset) {
-				this.xPositions.push(this.currentXPosition);
-				_Console.advanceLine();
-				this.linesFromCommand = this.linesFromCommand + 1;
-			}
-		}
-
         public init(): void {
             this.clearScreen();
             this.resetXY();
@@ -101,12 +72,10 @@ module TSOS {
 					//_DrawingContext.fillStyle="red";
 					_DrawingContext.clearRect(this.currentXPosition - _DrawingContext.measureText(this.currentFont,
 													this.currentFontSize, this.buffer.charAt(this.buffer.length-1)) ,
-                          //the y srating position
-												this.currentYPosition - _DefaultFontSize - _FontHeightMargin + 1,
-                        //now we calculate how big of an area of the canvas to clear
+												this.currentYPosition - 13,
 												_DrawingContext.measureText(this.currentFont,
 													this.currentFontSize, this.buffer.charAt(this.buffer.length-1)),
-												this.currentFontSize + 2*_FontHeightMargin);
+												this.currentFontSize + 5);
 					this.currentXPosition = this.currentXPosition - _DrawingContext.measureText(this.currentFont,
 													this.currentFontSize, this.buffer.charAt(this.buffer.length-1));
 					//remove the last character from our buffer
@@ -217,9 +186,38 @@ module TSOS {
             this.currentYPosition += _DefaultFontSize +
                                      _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                                      _FontHeightMargin;
-
-            // TODO: Handle scrolling. (Project 1)
-			      this.scroll();
+            this.scroll();
         }
+
+
+            //scrolling the canvas
+            public scroll(): void {
+              var offset = _DefaultFontSize +
+                            _DrawingContext.fontDescent(this.currentFont,
+                          this.currentFontSize) + _FontHeightMargin
+              // if the current y position is at the bottom of the canvas scroll the
+              // canvas back one line
+              if (this.currentYPosition >= _Canvas.height -offset) {
+                  var temp = _DrawingContext.getImageData(0, _DefaultFontSize +
+                    2*_FontHeightMargin, _Canvas.width, _Canvas.height - offset);
+                    _DrawingContext.clearRect(0,0,_Canvas.width, _Canvas.height);
+                    _DrawingContext.putImageData(temp,0,0);
+                    this.currentYPosition -= offset;
+              }
+            }
+
+            //line wrap
+            public wrapLine(text): void {
+              var offset = _DrawingContext.measureText(this.currentFont,
+                        this.currentFontSize,
+                        //this.buffer.charAt(this.buffer.length-1);
+                        text);
+              //if its going to be pasted the canvas move to next line and print
+              if (_Canvas.width <= this.currentXPosition + offset) {
+                this.xPositions.push(this.currentXPosition);
+                _Console.advanceLine();
+                this.linesFromCommand = this.linesFromCommand + 1;
+              }
+            }
     }
  }

@@ -36,6 +36,9 @@ var TSOS;
             this.krnTrace(_krnKeyboardDriver.status);
 
             //
+            _ProcessManager = new TSOS.ProcessManager();
+            _MemoryManager = new TSOS.MemoryManager();
+
             // ... more?
             //
             // Enable the OS Interrupts.  (Not the CPU clock interrupt, as that is done in the hardware sim.)
@@ -81,6 +84,9 @@ var TSOS;
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
             } else if (_CPU.isExecuting) {
                 _CPU.cycle();
+
+                //_Display.updatePCB(this.currentProcess.pid);
+                _Display.updateCPU();
             } else {
                 this.krnTrace("Idle");
             }
@@ -114,6 +120,16 @@ var TSOS;
                     _krnKeyboardDriver.isr(params); // Kernel mode device driver
                     _StdIn.handleInput();
                     break;
+                case INVAILD_MEMORY_ACCESS_IRQ:
+                    this.krnMemoryAccess(params);
+                    break;
+                case CPU_BREAK_IRQ:
+                    //_SystemCallLibrary.krnBreak(params);
+                    this.krnBreak(params);
+                    break;
+                case SYSTEM_CALL_IRQ:
+                    this.krnSysCall(params);
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }
@@ -122,6 +138,46 @@ var TSOS;
         Kernel.prototype.krnTimerISR = function () {
             // The built-in TIMER (not clock) Interrupt Service Routine (as opposed to an ISR coming from a device driver). {
             // Check multiprogramming parameters and enforce quanta here. Call the scheduler / context switch here if necessary.
+        };
+
+        Kernel.prototype.krnMemoryAccess = function (params) {
+            //save all data on cpu to the process control block
+            _CPU.currentProcess.update();
+
+            //end the process
+            _CPU.stop();
+
+            //message the user
+            _StdOut.putText("INVAILID MEMORY ACCESS...PROGRAM TERMINATED");
+            //it would be helpful to add where the error is
+        };
+
+        Kernel.prototype.krnBreak = function (params) {
+            //save all data on cpu to the process control block
+            //_CPU.currentProcess.update();
+            //end the process
+            _MemoryManager.freeSpace[_CPU.currentProcess.pid] = true;
+            _StdOut.putText("Process ID: " + _CPU.currentProcess.pid + " complete");
+            _CPU.stop();
+            //_CPU.currentProcess.state = halted or terminated?
+            //TODO context switching for project 3
+        };
+
+        Kernel.prototype.krnSysCall = function (params) {
+            //if 1 in Xreg print y
+            if (_CPU.Xreg = "01") {
+                _StdOut.putText(_CPU.Yreg);
+                //if 2 print string starting at location yReg and ending at 00
+            } else if (_CPU.Xreg = "02") {
+                var byte = _MemoryManager.read(_CPU.byteToInt(_CPU.Yreg), _CPU.currentProcess);
+                var string = "";
+                while (byte != "00") {
+                    string = string + byte;
+                }
+                _StdOut.putText(parseInt(string, 16));
+            } else {
+                _StdOut.putText("INVALID PARAMETER FOR SYSTEM CALL");
+            }
         };
 
         //
@@ -157,13 +213,14 @@ var TSOS;
             }
         };
 
+        // computer ran into some error
         Kernel.prototype.krnTrapError = function (msg) {
             TSOS.Control.hostLog("OS ERROR - TRAP: " + msg);
 
             // TODO: Display error on console, perhaps in some sort of colored screen. (Perhaps blue?)
             _DrawingContext.fillStyle = "Blue";
             _DrawingContext.fillRect(0, 0, _Canvas.width, _Canvas.height);
-            _StdOut.putText("Your PC ran into a problem that it couldn't handle and is now restarting...");
+            _StdOut.putText("Your PC ran into a problem that it couldn't handle");
             TSOS.Control.hostBtnHaltOS_click(this);
             this.krnShutdown();
         };

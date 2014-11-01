@@ -18,6 +18,9 @@ var TIMER_IRQ = 0;
 
 // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
 var KEYBOARD_IRQ = 1;
+var INVAILD_MEMORY_ACCESS_IRQ = 2;
+var CPU_BREAK_IRQ = 3;
+var SYSTEM_CALL_IRQ = 4;
 
 //
 // Global Variables
@@ -42,9 +45,19 @@ var _KernelInterruptQueue = null;
 var _KernelBuffers = null;
 var _KernelInputQueue = null;
 
+// A Library for all System Calls
+var _SystemCallLibrary;
+
+// Memory and Process control
+var _ProcessManager;
+var _MemoryManager;
+
 // Standard input and output
 var _StdIn = null;
 var _StdOut = null;
+
+// Display CPU, memory, and other things
+var _Display;
 
 // UI
 var _Console;

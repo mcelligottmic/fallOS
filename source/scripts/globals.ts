@@ -20,6 +20,10 @@ var CPU_CLOCK_INTERVAL: number = 100;   // This is in ms, or milliseconds, so 10
 var TIMER_IRQ: number = 0;  // Pages 23 (timer), 9 (interrupts), and 561 (interrupt priority).
                             // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
 var KEYBOARD_IRQ: number = 1;
+var INVAILD_MEMORY_ACCESS_IRQ: number = 2;
+var CPU_BREAK_IRQ: number = 3;
+var SYSTEM_CALL_IRQ: number = 4;
+
 
 
 //
@@ -46,9 +50,19 @@ var _KernelInterruptQueue = null;
 var _KernelBuffers: any[] = null;
 var _KernelInputQueue = null;
 
+// A Library for all System Calls
+var _SystemCallLibrary: TSOS.SystemCallLibrary;
+
+// Memory and Process control
+var _ProcessManager: TSOS.ProcessManager;
+var _MemoryManager: TSOS.MemoryManager;
+
 // Standard input and output
 var _StdIn  = null;
 var _StdOut = null;
+
+// Display CPU, memory, and other things
+var _Display: TSOS.Display;
 
 // UI
 var _Console: TSOS.Console;

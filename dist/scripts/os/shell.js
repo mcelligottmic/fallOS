@@ -73,6 +73,10 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellLoad, "load", "- validates the code in User Program Input. Only Hex digits and spaces are valid.");
             this.commandList[this.commandList.length] = sc;
 
+            // run <number>
+            sc = new TSOS.ShellCommand(this.shellRun, "run", "<number> - runs the program having pid of <number>.");
+            this.commandList[this.commandList.length] = sc;
+
             // status <string>
             sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Displays <string> under the status bar.");
             this.commandList[this.commandList.length] = sc;
@@ -339,6 +343,7 @@ var TSOS;
             var temp = document.getElementById('taProgramInput');
             var program = temp.value;
             program = program.replace(/\s+/g, '');
+
             var valid = true;
 
             // \d matches to a digit
@@ -357,8 +362,16 @@ var TSOS;
             if (!valid) {
                 _StdOut.putText("invalid...do you need some help?");
             } else {
-                _StdOut.putText("successfully loaded");
+                //store program into main memory starting at location $0000
+                var pid = _ProcessManager.load(program);
+                _StdOut.putText("Process ID: " + pid);
             }
+        };
+
+        //runs the program that is loaded
+        Shell.prototype.shellRun = function (pid) {
+            //run the program
+            _CPU.start(_ProcessManager.processes[pid]);
         };
 
         Shell.prototype.shellStatus = function (args) {
