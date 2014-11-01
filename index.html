@@ -12,6 +12,9 @@
    <!-- Globals CONSTANTS and _Variables. Must included be first. -->
    <script type="text/javascript" src="dist/scripts/globals.js"></script>
 
+   <!-- Libraries -->
+   <script type="text/javascript" src="dist/scripts/os/SystemCallLibrary.js"></script>
+
    <!-- Host (Hardware Simulation) Routines -->
    <script type="text/javascript" src="dist/scripts/host/control.js"></script>
    <script type="text/javascript" src="dist/scripts/host/devices.js"></script>
@@ -31,6 +34,7 @@
    <script type="text/javascript" src="dist/scripts/os/memoryManager.js"></script>
    <script type="text/javascript" src="dist/scripts/os/PCB.js"></script>
    <script type="text/javascript" src="dist/scripts/os/display.js"></script>
+
    <script type="text/javascript" src="dist/scripts/os/processManager.js"></script>
    <script type="text/javascript" src="dist/scripts/os/kernel.js"></script>
 
@@ -482,24 +486,24 @@
            <td> Registers </td>
          </tr>
          <tr>
-           <td>PC</td>
-           <td id = "PC"> FF </td>
-         </tr>
-         <tr> 
-           <td>Acc</td>
-           <td id = "Acc"> 00 </td>
+           <td> PC </td>
+           <td id="pc">0</td>
          </tr>
          <tr>
-           <td>Xreg</td>
-           <td id = "Xreg"> 00 </td>
+           <td> Acc </td>
+           <td id="Acc">0</td>
          </tr>
          <tr>
-           <td>Yreg</td>
-           <td id = "Yreg"> 00 </td>
+           <td> Xreg </td>
+           <td id="Xreg">0</td>
          </tr>
          <tr>
-           <td>Zreg</td>
-           <td id = "Zreg"> 00 </td>
+           <td> Yreg </td>
+           <td id="Yreg">0</td>
+         </tr>
+         <tr>
+           <td> Zflag </td>
+           <td id="Zflag">0</td>
          </tr>
        </table>
 </div>

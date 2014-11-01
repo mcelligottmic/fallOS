@@ -26,7 +26,6 @@ module TSOS {
         }
         _StdOut.putText(string);
       } else {
-        //blue screen of death
         _StdOut.putText("INVALID PARAMETER FOR SYSTEM CALL");
       }
     }

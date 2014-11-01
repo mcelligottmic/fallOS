@@ -124,10 +124,11 @@ var TSOS;
                     this.krnMemoryAccess(params);
                     break;
                 case CPU_BREAK_IRQ:
-                    _SystemCallLibrary.krnBreak(params);
+                    //_SystemCallLibrary.krnBreak(params);
+                    this.krnBreak(params);
                     break;
                 case SYSTEM_CALL_IRQ:
-                    _SystemCallLibrary.krnSysCall(params);
+                    this.krnSysCall(params);
                     break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
@@ -149,6 +150,34 @@ var TSOS;
             //message the user
             _StdOut.putText("INVAILID MEMORY ACCESS...PROGRAM TERMINATED");
             //it would be helpful to add where the error is
+        };
+
+        Kernel.prototype.krnBreak = function (params) {
+            //save all data on cpu to the process control block
+            //_CPU.currentProcess.update();
+            //end the process
+            _MemoryManager.freeSpace[_CPU.currentProcess.pid] = true;
+            _StdOut.putText("Process ID: " + _CPU.currentProcess.pid + " complete");
+            _CPU.stop();
+            //_CPU.currentProcess.state = halted or terminated?
+            //TODO context switching for project 3
+        };
+
+        Kernel.prototype.krnSysCall = function (params) {
+            //if 1 in Xreg print y
+            if (_CPU.Xreg = "01") {
+                _StdOut.putText(_CPU.Yreg);
+                //if 2 print string starting at location yReg and ending at 00
+            } else if (_CPU.Xreg = "02") {
+                var byte = _MemoryManager.read(_CPU.byteToInt(_CPU.Yreg), _CPU.currentProcess);
+                var string = "";
+                while (byte != "00") {
+                    string = string + byte;
+                }
+                _StdOut.putText(parseInt(string, 16));
+            } else {
+                _StdOut.putText("INVALID PARAMETER FOR SYSTEM CALL");
+            }
         };
 
         //
