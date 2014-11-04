@@ -391,7 +391,7 @@ module TSOS {
         } else {
           //store program into main memory starting at location $0000
           var pid = _ProcessManager.load(program);
-				  _StdOut.putText("Process ID: " + pid);
+				  _StdOut.putText("Process ID: " + pid + "");
 			  }
     }//end Load
 
@@ -399,6 +399,7 @@ module TSOS {
     public shellRun(pid: number) {
       //run the program
       _CPU.start(_ProcessManager.processes[pid]);
+      _StdOut.putText("Process ID: " + _CPU.currentProcess.pid + " running");
     }//end Load
 
 		public shellStatus(args) {

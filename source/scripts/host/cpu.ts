@@ -122,8 +122,7 @@ module TSOS {
 
         //Increase the PC by a set amount
         public addToPC(num: number): void {
-          this.PC = (parseInt(this.PC, 16) + num).toString(16).toUpperCase();
-          //do we go back to zero at end of program?
+          this.PC = ((parseInt(this.PC, 16) + num) % _MemoryManager.BLOCKSIZE).toString(16).toUpperCase();
         }
 
         //gets the next byte and returns it as a string
@@ -185,7 +184,8 @@ module TSOS {
         //LDX AE
         //Load the X register from memory
         public LDXm(): void {
-          this.Xreg = this.getNextAddress().toString(16).toUpperCase();
+          this.Xreg = parseInt(this.dataAt(this.getNextAddress()), 16)
+                        .toString(16).toUpperCase();
         }
 
         //LDY A0
@@ -197,7 +197,9 @@ module TSOS {
         //LDY AC
         //Load the Y register from memory
         public LDYm(): void {
-          this.Yreg = this.getNextAddress().toString(16).toUpperCase();
+          this.Yreg = parseInt(this.dataAt(this.getNextAddress()), 16)
+                        .toString(16).toUpperCase();
+
         }
 
         //NOP EA
@@ -220,6 +222,8 @@ module TSOS {
           var address = this.getNextAddress();
           var value = parseInt(this.dataAt(address), 16);
           if (value == parseInt(this.Xreg) ) {
+            this.Zflag = "01";
+          } else {
             this.Zflag = "00";
           }
         }
@@ -229,21 +233,23 @@ module TSOS {
         public BNE(): void {
           if (this.Zflag == "00") {
             //branch
-            this.addToPC(parseInt(this.dataAt(parseInt(this.PC, 16))));
+            this.addToPC(parseInt(this.dataAt(parseInt(this.PC, 16)), 16));
           }
+          this.addToPC(1);
         }
 
         //INC EE
         //Increment the value of a byte
         public INC(): void {
           var address = this.getNextAddress();
-          this.storeAt(address, (parseInt(this.dataAt(address)) + 1).toString(16).toUpperCase());
+          this.storeAt(address, (parseInt(this.dataAt(address), 16) + 1).toString(16).toUpperCase());
         }
 
         //SYS FF
         //System Call
         public SYS(): void {
-          _KernelInterruptQueue.enqueue(new Interrupt(SYSTEM_CALL_IRQ, []));
+          _KernelInterruptQueue.enqueue(new Interrupt(SYSTEM_CALL_IRQ,
+                      [this.Xreg, this.Yreg, this.currentProcess]));
         }
     }
 }
