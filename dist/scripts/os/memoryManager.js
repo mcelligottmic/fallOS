@@ -51,6 +51,9 @@ var TSOS;
             _ProcessManager.processes[pid].accumulator = "0";
             _ProcessManager.processes[pid].PC = this.loadIndex.toString(16);
             this.freeSpace[pid] = false;
+
+            //update display
+            _DisplayManager.updateRam();
         };
 
         //fills main memory with 00 at each location
@@ -82,8 +85,8 @@ var TSOS;
         MemoryManager.prototype.write = function (location, data, pcb) {
             //check to see if we are out of bounds with memory access
             //check PCB for base and limit
-            var base = pcb.base;
-            var limit = pcb.limit;
+            var base = parseInt(pcb.base, 16);
+            var limit = parseInt(pcb.limit, 16);
 
             //if location is within base and limit
             if (location >= base && location < limit) {

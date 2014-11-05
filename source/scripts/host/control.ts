@@ -27,46 +27,57 @@ module TSOS {
 
     export class Control {
 
-        public static hostInit(): void {
+      public static userProgramInit(): void {
+        //Put default program into User Program Input
+        (<HTMLInputElement> document.getElementById("taProgramInput")).
+        value="A9 00 8D 7B 00 A9 00 8D 7B 00 A9 00 8D 7C 00 A9 00 8D 7C " +
+        "00 A9 01 8D 7A 00 A2 00 EC 7A 00 D0 39 A0 7D A2 02 FF AC 7B 00 " +
+        "A2 01 FF AD 7B 00 8D 7A 00 A9 01 6D 7A 00 8D 7B 00 A9 03 AE 7B " +
+        "00 8D 7A 00 A9 00 EC 7A 00 D0 02 A9 01 8D 7A 00 A2 01 EC 7A 00 " +
+        "D0 05 A9 01 8D 7C 00 A9 00 AE 7C 00 8D 7A 00 A9 00 EC 7A 00 D0 " +
+        "02 A9 01 8D 7A 00 A2 00 EC 7A 00 D0 AC A0 7F A2 02 FF 00 00 00 " +
+        "00 61 00 61 64 6F 6E 65 00";
+      }
 
-            // Get a global reference to the canvas.  TODO: Move this stuff into a Display Device Driver, maybe?
-            _Canvas = <HTMLCanvasElement>document.getElementById('display');
+      public static hostInit(): void {
+        // Get a global reference to the canvas.  TODO: Move this stuff into a Display Device Driver, maybe?
+        _Canvas = <HTMLCanvasElement>document.getElementById('display');
 
-            // Get a global reference to the drawing context.
-            _DrawingContext = _Canvas.getContext('2d');
+        // Get a global reference to the drawing context.
+        _DrawingContext = _Canvas.getContext('2d');
 
-            // Enable the added-in canvas text functions (see canvastext.ts for provenance and details).
-            CanvasTextFunctions.enable(_DrawingContext);   // Text functionality is now built in to the HTML5 canvas. But this is old-school, and fun.
+        // Enable the added-in canvas text functions (see canvastext.ts for provenance and details).
+        CanvasTextFunctions.enable(_DrawingContext);   // Text functionality is now built in to the HTML5 canvas. But this is old-school, and fun.
 
-            // Clear the log text box.
-            // Use the TypeScript cast to HTMLInputElement
-            (<HTMLInputElement> document.getElementById("taHostLog")).value="";
+        // Clear the log text box.
+        // Use the TypeScript cast to HTMLInputElement
+        (<HTMLInputElement> document.getElementById("taHostLog")).value="";
 
-            // Set focus on the start button.
-            // Use the TypeScript cast to HTMLInputElement
-            (<HTMLInputElement> document.getElementById("btnStartOS")).focus();
+        // Set focus on the start button.
+        // Use the TypeScript cast to HTMLInputElement
+        (<HTMLInputElement> document.getElementById("btnStartOS")).focus();
 
-            // Check for our testing and enrichment core.
-            if (typeof Glados === "function") {
-                _GLaDOS = new Glados();
-                _GLaDOS.init();
-            }
+        // Check for our testing and enrichment core.
+        if (typeof Glados === "function") {
+          _GLaDOS = new Glados();
+          _GLaDOS.init();
+          }
         }
 
         public static hostLog(msg: string, source: string = "?"): void {
-            // Note the OS CLOCK.
-            var clock: number = _OSclock;
+          // Note the OS CLOCK.
+          var clock: number = _OSclock;
 
-            // Note the REAL clock in milliseconds since January 1, 1970.
-            var now: number = new Date().getTime();
+          // Note the REAL clock in milliseconds since January 1, 1970.
+          var now: number = new Date().getTime();
 
-            // Build the log string.
-            var str: string = "({ clock:" + clock + ", source:" + source + ", msg:" + msg + ", now:" + now  + " })"  + "\n";
+          // Build the log string.
+          var str: string = "({ clock:" + clock + ", source:" + source + ", msg:" + msg + ", now:" + now  + " })"  + "\n";
 
-            // Update the log console.
-            var taLog = <HTMLInputElement> document.getElementById("taHostLog");
-            taLog.value = str + taLog.value;
-            // Optionally update a log database or some streaming service.
+          // Update the log console.
+          var taLog = <HTMLInputElement> document.getElementById("taHostLog");
+          taLog.value = str + taLog.value;
+          // Optionally update a log database or some streaming service.
         }
 
 
@@ -74,43 +85,43 @@ module TSOS {
         // Host Events
         //
         public static hostBtnStartOS_click(btn): void {
-            // Disable the (passed-in) start button...
-            btn.disabled = true;
+          // Disable the (passed-in) start button...
+          btn.disabled = true;
 
-            // .. enable the Halt and Reset buttons ...
-            document.getElementById("btnHaltOS").disabled = false;
-            document.getElementById("btnReset").disabled = false;
+          // .. enable the Halt and Reset buttons ...
+          document.getElementById("btnHaltOS").disabled = false;
+          document.getElementById("btnReset").disabled = false;
 
-            // .. set focus on the OS console display ...
-            document.getElementById("display").focus();
+          // .. set focus on the OS console display ...
+          document.getElementById("display").focus();
 
-            // ... Create and initialize the CPU (because it's part of the hardware)  ...
-            _CPU = new Cpu();
-            _CPU.init();
+          // ... Create and initialize the CPU (because it's part of the hardware)  ...
+          _CPU = new Cpu();
+          _CPU.init();
 
-            // ... then set the host clock pulse ...
-            _hardwareClockID = setInterval(Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
-            // .. and call the OS Kernel Bootstrap routine.
-            _Kernel = new Kernel();
-            _Kernel.krnBootstrap();
+          // ... then set the host clock pulse ...
+          _hardwareClockID = setInterval(Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
+          // .. and call the OS Kernel Bootstrap routine.
+          _Kernel = new Kernel();
+          _Kernel.krnBootstrap();
         }
 
         public static hostBtnHaltOS_click(btn): void {
-            Control.hostLog("Emergency halt", "host");
-            Control.hostLog("Attempting Kernel shutdown.", "host");
-            // Call the OS shutdown routine.
-            _Kernel.krnShutdown();
-            // Stop the interval that's simulating our clock pulse.
-            clearInterval(_hardwareClockID);
-            // TODO: Is there anything else we need to do here?
+          Control.hostLog("Emergency halt", "host");
+          Control.hostLog("Attempting Kernel shutdown.", "host");
+          // Call the OS shutdown routine.
+          _Kernel.krnShutdown();
+          // Stop the interval that's simulating our clock pulse.
+          clearInterval(_hardwareClockID);
+          // TODO: Is there anything else we need to do here?
         }
 
         public static hostBtnReset_click(btn): void {
-            // The easiest and most thorough way to do this is to reload (not refresh) the document.
-            location.reload(true);
-            // That boolean parameter is the 'forceget' flag. When it is true it causes the page to always
-            // be reloaded from the server. If it is false or not specified the browser may reload the
-            // page from its cache, which is not what we want.
+          // The easiest and most thorough way to do this is to reload (not refresh) the document.
+          location.reload(true);
+          // That boolean parameter is the 'forceget' flag. When it is true it causes the page to always
+          // be reloaded from the server. If it is false or not specified the browser may reload the
+          // page from its cache, which is not what we want.
         }
     }
 }

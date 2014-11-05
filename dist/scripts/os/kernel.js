@@ -38,6 +38,7 @@ var TSOS;
             //
             _ProcessManager = new TSOS.ProcessManager();
             _MemoryManager = new TSOS.MemoryManager();
+            _DisplayManager = new TSOS.DisplayManager();
 
             // ... more?
             //
@@ -85,8 +86,8 @@ var TSOS;
             } else if (_CPU.isExecuting) {
                 _CPU.cycle();
 
-                //_Display.updatePCB(this.currentProcess.pid);
-                _Display.updateCPU();
+                //displays cpu, memory, and PCB
+                _DisplayManager.updateAll();
             } else {
                 this.krnTrace("Idle");
             }
@@ -164,17 +165,24 @@ var TSOS;
         };
 
         Kernel.prototype.krnSysCall = function (params) {
+            var xReg = params[0];
+            var yReg = params[1];
+            var pcb = params[2];
+
             //if 1 in Xreg print y
-            if (_CPU.Xreg = "01") {
-                _StdOut.putText(_CPU.Yreg);
+            if (parseInt(xReg, 16) == 1) {
+                _StdOut.putText(yReg);
                 //if 2 print string starting at location yReg and ending at 00
-            } else if (_CPU.Xreg = "02") {
-                var byte = _MemoryManager.read(_CPU.byteToInt(_CPU.Yreg), _CPU.currentProcess);
+            } else if (parseInt(xReg, 16) == 2) {
+                var byte = _MemoryManager.read(parseInt(yReg, 16), pcb);
                 var string = "";
+                var offset = 0;
                 while (byte != "00") {
-                    string = string + byte;
+                    string = string + String.fromCharCode(parseInt(byte, 16));
+                    offset++;
+                    byte = _MemoryManager.read((parseInt(yReg, 16) + offset), pcb);
                 }
-                _StdOut.putText(parseInt(string, 16));
+                _StdOut.putText(string);
             } else {
                 _StdOut.putText("INVALID PARAMETER FOR SYSTEM CALL");
             }

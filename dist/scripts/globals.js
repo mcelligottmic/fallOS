@@ -57,7 +57,7 @@ var _StdIn = null;
 var _StdOut = null;
 
 // Display CPU, memory, and other things
-var _Display;
+var _DisplayManager;
 
 // UI
 var _Console;
@@ -77,4 +77,5 @@ var Glados = null;
 
 var onDocumentLoad = function () {
     TSOS.Control.hostInit();
+    TSOS.Control.userProgramInit();
 };
