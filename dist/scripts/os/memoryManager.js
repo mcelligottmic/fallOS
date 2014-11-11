@@ -8,8 +8,8 @@ var TSOS;
     var MemoryManager = (function () {
         function MemoryManager() {
             //properties
-            this.MAXRAM = 256;
             this.BLOCKSIZE = 256;
+            this.MAXRAM = this.BLOCKSIZE;
             //need to figure out how to force integer division
             this.NUM_OF_BLOCKS = this.MAXRAM / this.BLOCKSIZE;
             //true if block is ready for use
@@ -19,8 +19,10 @@ var TSOS;
         MemoryManager.prototype.init = function () {
             this.loadIndex = 0;
             this.lastLoad = 0;
-            this.memory = new TSOS.mainMemory(256);
+            this.memory = new TSOS.mainMemory(this.MAXRAM);
             this.freeSpace[0] = true;
+            this.freeSpace[1] = true;
+            this.freeSpace[2] = true;
         };
 
         MemoryManager.prototype.load = function (program, pid) {
@@ -56,7 +58,7 @@ var TSOS;
             _DisplayManager.updateRam();
         };
 
-        //fills main memory with 00 at each location
+        //fills block of memory with 00 at each location
         MemoryManager.prototype.clear = function (base) {
             for (var i = base; i < this.memory.max; i++) {
                 //RAM is an array of type string that will represent main memory
@@ -77,7 +79,7 @@ var TSOS;
                 return this.memory.RAM[location];
             } else {
                 //error
-                _KernelInterruptQueue.enqueue(INVAILD_MEMORY_ACCESS_IRQ);
+                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(INVAILD_MEMORY_ACCESS_IRQ, []));
             }
         };
 
@@ -93,7 +95,7 @@ var TSOS;
                 this.memory.RAM[location] = data;
             } else {
                 //error
-                _KernelInterruptQueue.enqueue(INVAILD_MEMORY_ACCESS_IRQ);
+                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(INVAILD_MEMORY_ACCESS_IRQ, []));
             }
         };
         return MemoryManager;

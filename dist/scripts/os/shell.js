@@ -81,6 +81,10 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Displays <string> under the status bar.");
             this.commandList[this.commandList.length] = sc;
 
+            // clearmem
+            sc = new TSOS.ShellCommand(this.shellRun, "clearmem", "- clears all memory partitions.");
+            this.commandList[this.commandList.length] = sc;
+
             // processes - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -385,6 +389,11 @@ var TSOS;
             } else {
                 document.getElementById('statusBox').innerHTML = "Usage: status <string>  Please supply a string.";
             }
+        };
+
+        //set all blocks of main memory to "00"
+        Shell.prototype.shellClearMem = function (args) {
+            _MemoryManager.memory.init();
         };
         return Shell;
     })();

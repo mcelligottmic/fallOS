@@ -23,107 +23,114 @@ module TSOS {
         }
 
         public init() {
-            var sc = null;
-            //
-            // Load the command list.
+          var sc = null;
+          //
+          // Load the command list.
 
-            // ver
-            sc = new ShellCommand(this.shellVer,
-                                  "ver",
-                                  "- Displays the current version data.");
-            this.commandList[this.commandList.length] = sc;
+          // ver
+          sc = new ShellCommand(this.shellVer,
+                                "ver",
+                                "- Displays the current version data.");
+          this.commandList[this.commandList.length] = sc;
 
-            // help
-            sc = new ShellCommand(this.shellHelp,
-                                  "help",
-                                  "- This is the help command. Seek help.");
-            this.commandList[this.commandList.length] = sc;
+          // help
+          sc = new ShellCommand(this.shellHelp,
+                                "help",
+                                "- This is the help command. Seek help.");
+          this.commandList[this.commandList.length] = sc;
 
-            // shutdown
-            sc = new ShellCommand(this.shellShutdown,
-                                  "shutdown",
-                                  "- Shuts down the virtual OS but leaves the underlying hardware simulation running.");
-            this.commandList[this.commandList.length] = sc;
+          // shutdown
+          sc = new ShellCommand(this.shellShutdown,
+                                "shutdown",
+                                "- Shuts down the virtual OS but leaves the underlying hardware simulation running.");
+          this.commandList[this.commandList.length] = sc;
 
-            // cls
-            sc = new ShellCommand(this.shellCls,
-                                  "cls",
-                                  "- Clears the screen and resets the cursor position.");
-            this.commandList[this.commandList.length] = sc;
+          // cls
+          sc = new ShellCommand(this.shellCls,
+                                "cls",
+                                "- Clears the screen and resets the cursor position.");
+          this.commandList[this.commandList.length] = sc;
 
-            // man <topic>
-            sc = new ShellCommand(this.shellMan,
-                                  "man",
-                                  "<topic> - Displays the MANual page for <topic>.");
-            this.commandList[this.commandList.length] = sc;
+          // man <topic>
+          sc = new ShellCommand(this.shellMan,
+                                "man",
+                                "<topic> - Displays the MANual page for <topic>.");
+          this.commandList[this.commandList.length] = sc;
 
-            // trace <on | off>
-            sc = new ShellCommand(this.shellTrace,
-                                  "trace",
-                                  "<on | off> - Turns the OS trace on or off.");
-            this.commandList[this.commandList.length] = sc;
+          // trace <on | off>
+          sc = new ShellCommand(this.shellTrace,
+                                "trace",
+                                "<on | off> - Turns the OS trace on or off.");
+          this.commandList[this.commandList.length] = sc;
 
-            // rot13 <string>
-            sc = new ShellCommand(this.shellRot13,
-                                  "rot13",
-                                  "<string> - Does rot13 obfuscation on <string>.");
-            this.commandList[this.commandList.length] = sc;
+          // rot13 <string>
+          sc = new ShellCommand(this.shellRot13,
+                                "rot13",
+                                "<string> - Does rot13 obfuscation on <string>.");
+          this.commandList[this.commandList.length] = sc;
 
-            // prompt <string>
-            sc = new ShellCommand(this.shellPrompt,
-                                  "prompt",
-                                  "<string> - Sets the prompt.");
-            this.commandList[this.commandList.length] = sc;
+          // prompt <string>
+          sc = new ShellCommand(this.shellPrompt,
+                                "prompt",
+                                "<string> - Sets the prompt.");
+          this.commandList[this.commandList.length] = sc;
 
-			// date
-            sc = new ShellCommand(this.shellDate,
-                                  "date",
-                                  "- Displays the current date and time");
-            this.commandList[this.commandList.length] = sc;
+			    // date
+          sc = new ShellCommand(this.shellDate,
+                                "date",
+                                "- Displays the current date and time");
+          this.commandList[this.commandList.length] = sc;
 
-			// whereami
-            sc = new ShellCommand(this.shellWhereAmI,
-                                  "whereami",
-                                  "- Displays your current location.");
-            this.commandList[this.commandList.length] = sc;
+			    // whereami
+          sc = new ShellCommand(this.shellWhereAmI,
+                                "whereami",
+                                "- Displays your current location.");
+          this.commandList[this.commandList.length] = sc;
 
-			// rules
-            sc = new ShellCommand(this.shellRules,
-                                  "rules",
-                                  "- rules for a world with zombies");
-            this.commandList[this.commandList.length] = sc;
+			    // rules
+          sc = new ShellCommand(this.shellRules,
+                                "rules",
+                                "- rules for a world with zombies");
+          this.commandList[this.commandList.length] = sc;
 
-			// BSOD
-            sc = new ShellCommand(this.shellBSOD,
-                                  "bsod",
-                                  "- Blue Screen of Death...great power comes with great responsibility");
-            this.commandList[this.commandList.length] = sc;
+			    // BSOD
+          sc = new ShellCommand(this.shellBSOD,
+                                "bsod",
+                                "- Blue Screen of Death...great power comes with great responsibility");
+          this.commandList[this.commandList.length] = sc;
 
-			// load
-            sc = new ShellCommand(this.shellLoad,
-                                  "load",
-                                  "- validates the code in User Program Input. Only Hex digits and spaces are valid.");
-            this.commandList[this.commandList.length] = sc;
+			    // load
+          sc = new ShellCommand(this.shellLoad,
+                                "load",
+                                "- validates the code in User Program Input. Only Hex digits and spaces are valid.");
+          this.commandList[this.commandList.length] = sc;
 
-            // run <number>
-            sc = new ShellCommand(this.shellRun,
-                            "run",
-                            "<number> - runs the program having pid of <number>.");
-            this.commandList[this.commandList.length] = sc;
+          // run <number>
+          sc = new ShellCommand(this.shellRun,
+                                "run",
+                                "<number> - runs the program having pid of <number>.");
+          this.commandList[this.commandList.length] = sc;
 
-			// status <string>
-            sc = new ShellCommand(this.shellStatus,
-                                  "status",
-                                  "<string> - Displays <string> under the status bar.");
-            this.commandList[this.commandList.length] = sc;
+			    // status <string>
+          sc = new ShellCommand(this.shellStatus,
+                                "status",
+                                "<string> - Displays <string> under the status bar.");
+          this.commandList[this.commandList.length] = sc;
 
-            // processes - list the running processes and their IDs
-            // kill <id> - kills the specified process id.
+          // clearmem
+          sc = new ShellCommand(this.shellRun,
+                                "clearmem",
+                                "- clears all memory partitions.");
+          this.commandList[this.commandList.length] = sc;
 
-            //
-            // Display the initial prompt.
-            this.putPrompt();
-        }
+          // processes - list the running processes and their IDs
+          // kill <id> - kills the specified process id.
+
+          //
+          // Display the initial prompt.
+          this.putPrompt();
+
+        }//end init
 
         public putPrompt() {
             _StdOut.putText(this.promptStr);
@@ -400,19 +407,24 @@ module TSOS {
       //run the program
       _CPU.start(_ProcessManager.processes[pid]);
       _StdOut.putText("Process ID: " + _CPU.currentProcess.pid + " running");
-    }//end Load
+    }//end run
 
 		public shellStatus(args) {
-            if (args.length > 0) {
+      if (args.length > 0) {
 				var newString: string = "";
 				for(var i = 0; i < args.length; i++){
 					newString = newString + args[i] + " ";
 				}
                 document.getElementById('statusBox').innerHTML = newString;
-            } else {
-                document.getElementById('statusBox').innerHTML = "Usage: status <string>  Please supply a string.";
-            }
-        }//end shellStatus
+      } else {
+          document.getElementById('statusBox').innerHTML = "Usage: status <string>  Please supply a string.";
+        }
+    }//end shellStatus
+
+    //set all blocks of main memory to "00"
+    public shellClearMem(args) {
+      _MemoryManager.memory.init();
+    }//end shellClearMem
 
     }
 }

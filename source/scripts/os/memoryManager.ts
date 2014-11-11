@@ -10,8 +10,8 @@ module TSOS {
 
     export class MemoryManager {
       //properties
-      public MAXRAM = 256;
       public BLOCKSIZE = 256;
+      public MAXRAM = this.BLOCKSIZE;
       //need to figure out how to force integer division
       public NUM_OF_BLOCKS = this.MAXRAM / this.BLOCKSIZE;
       //used to find where to start loading
@@ -29,12 +29,15 @@ module TSOS {
       public init(): void {
         this.loadIndex = 0;
         this.lastLoad = 0;
-        this.memory = new mainMemory(256);
+        this.memory = new mainMemory(this.MAXRAM);
         this.freeSpace[0] = true;
+        this.freeSpace[1] = true;
+        this.freeSpace[2] = true;
       }//end init
 
       public load( program : string, pid : number): void {
         //determine which blocks are open
+
         //determine how many blocks of memory we need
         this.loadIndex = 0; //update this when we have more blocks
         //clear the block we are going to use
@@ -63,7 +66,7 @@ module TSOS {
       _DisplayManager.updateRam();
       }
 
-      //fills main memory with 00 at each location
+      //fills block of memory with 00 at each location
       public clear( base: number ): void {
         for (var i = base; i < this.memory.max; i++){
           //RAM is an array of type string that will represent main memory
@@ -83,7 +86,7 @@ module TSOS {
           return this.memory.RAM[location];
         } else {
           //error
-          _KernelInterruptQueue.enqueue(INVAILD_MEMORY_ACCESS_IRQ);
+          _KernelInterruptQueue.enqueue(new Interrupt(INVAILD_MEMORY_ACCESS_IRQ, []));
         }
       }
 
@@ -98,7 +101,7 @@ module TSOS {
           this.memory.RAM[location] = data;
         } else {
           //error
-          _KernelInterruptQueue.enqueue(INVAILD_MEMORY_ACCESS_IRQ);
+          _KernelInterruptQueue.enqueue(new Interrupt(INVAILD_MEMORY_ACCESS_IRQ, []));
         }
       }
 
