@@ -118,7 +118,7 @@ module TSOS {
           this.commandList[this.commandList.length] = sc;
 
           // clearmem
-          sc = new ShellCommand(this.shellRun,
+          sc = new ShellCommand(this.shellClearMem,
                                 "clearmem",
                                 "- clears all memory partitions.");
           this.commandList[this.commandList.length] = sc;
@@ -423,7 +423,8 @@ module TSOS {
 
     //set all blocks of main memory to "00"
     public shellClearMem(args) {
-      _MemoryManager.memory.init();
+      _MemoryManager.clearMem();
+      _StdOut.putText("Memory has been cleared...");
     }//end shellClearMem
 
     }

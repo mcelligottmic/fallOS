@@ -22,6 +22,8 @@ var INVAILD_MEMORY_ACCESS_IRQ = 2;
 var CPU_BREAK_IRQ = 3;
 var SYSTEM_CALL_IRQ = 4;
 
+var _MAXRAM = (256 * 3);
+
 //
 // Global Variables
 //

@@ -9,7 +9,7 @@ var TSOS;
         function MemoryManager() {
             //properties
             this.BLOCKSIZE = 256;
-            this.MAXRAM = this.BLOCKSIZE;
+            this.MAXRAM = _MAXRAM;
             //need to figure out how to force integer division
             this.NUM_OF_BLOCKS = this.MAXRAM / this.BLOCKSIZE;
             //true if block is ready for use
@@ -19,7 +19,7 @@ var TSOS;
         MemoryManager.prototype.init = function () {
             this.loadIndex = 0;
             this.lastLoad = 0;
-            this.memory = new TSOS.mainMemory(this.MAXRAM);
+            this.memory = new TSOS.mainMemory();
             this.freeSpace[0] = true;
             this.freeSpace[1] = true;
             this.freeSpace[2] = true;
@@ -28,7 +28,8 @@ var TSOS;
         MemoryManager.prototype.load = function (program, pid) {
             //determine which blocks are open
             //determine how many blocks of memory we need
-            this.loadIndex = 0; //update this when we have more blocks
+            //update, as of now each program can only be of size 256
+            this.loadIndex = (pid % 3) * 256;
 
             //clear the block we are going to use
             this.clear(this.loadIndex);
@@ -50,9 +51,9 @@ var TSOS;
             _ProcessManager.processes[pid].xRegister = "00";
             _ProcessManager.processes[pid].yRegister = "00";
             _ProcessManager.processes[pid].zRegister = "00";
-            _ProcessManager.processes[pid].accumulator = "0";
+            _ProcessManager.processes[pid].accumulator = "00";
             _ProcessManager.processes[pid].PC = this.loadIndex.toString(16);
-            this.freeSpace[pid] = false;
+            this.freeSpace[pid % 3] = false;
 
             //update display
             _DisplayManager.updateRam();
@@ -60,11 +61,18 @@ var TSOS;
 
         //fills block of memory with 00 at each location
         MemoryManager.prototype.clear = function (base) {
-            for (var i = base; i < this.memory.max; i++) {
+            for (var i = 0; i < this.BLOCKSIZE; i++) {
                 //RAM is an array of type string that will represent main memory
-                this.memory.RAM[i] = "00";
+                this.memory.RAM[i + base] = "00";
             }
+            this.freeSpace[base % 256] = true;
             this.lastLoad = base;
+        };
+
+        //clear all memory
+        MemoryManager.prototype.clearMem = function () {
+            this.memory.init();
+            _DisplayManager.updateRam();
         };
 
         //check access to read from memory
@@ -73,6 +81,9 @@ var TSOS;
             //check PCB for base and limit
             var base = parseInt(pcb.base, 16);
             var limit = parseInt(pcb.limit, 16);
+
+            //add offset
+            location = (location % this.BLOCKSIZE) + base;
 
             //if location is within base and limit
             if (location >= base && location < limit) {
@@ -89,6 +100,9 @@ var TSOS;
             //check PCB for base and limit
             var base = parseInt(pcb.base, 16);
             var limit = parseInt(pcb.limit, 16);
+
+            //add offset
+            location = (location % this.BLOCKSIZE) + base;
 
             //if location is within base and limit
             if (location >= base && location < limit) {

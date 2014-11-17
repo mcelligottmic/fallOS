@@ -11,12 +11,12 @@ TypeScript/JavaScript in both the host and client environments.
 var TSOS;
 (function (TSOS) {
     var mainMemory = (function () {
-        function mainMemory(num) {
+        function mainMemory() {
             //properties
             //main memory will be stored in bytes
             this.RAM = [];
-            this.max = 256;
-            this.max = num;
+            this.max = _MAXRAM;
+            this.init();
         }
         //fills main memory with 00 at each location
         mainMemory.prototype.init = function () {

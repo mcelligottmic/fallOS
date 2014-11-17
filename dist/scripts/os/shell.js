@@ -82,7 +82,7 @@ var TSOS;
             this.commandList[this.commandList.length] = sc;
 
             // clearmem
-            sc = new TSOS.ShellCommand(this.shellRun, "clearmem", "- clears all memory partitions.");
+            sc = new TSOS.ShellCommand(this.shellClearMem, "clearmem", "- clears all memory partitions.");
             this.commandList[this.commandList.length] = sc;
 
             // processes - list the running processes and their IDs
@@ -393,7 +393,8 @@ var TSOS;
 
         //set all blocks of main memory to "00"
         Shell.prototype.shellClearMem = function (args) {
-            _MemoryManager.memory.init();
+            _MemoryManager.clearMem();
+            _StdOut.putText("Memory has been cleared...");
         };
         return Shell;
     })();
