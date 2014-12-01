@@ -23,6 +23,7 @@ var KEYBOARD_IRQ: number = 1;
 var INVAILD_MEMORY_ACCESS_IRQ: number = 2;
 var CPU_BREAK_IRQ: number = 3;
 var SYSTEM_CALL_IRQ: number = 4;
+var BSOD_IRQ: number = 255;
 
 var _MAXRAM: number = (256 * 3);
 
@@ -56,6 +57,7 @@ var _SystemCallLibrary: TSOS.SystemCallLibrary;
 // Memory and Process control
 var _ProcessManager: TSOS.ProcessManager;
 var _MemoryManager: TSOS.MemoryManager;
+var _CPUScheduler: TSOS.CPUScheduler;
 
 // Standard input and output
 var _StdIn  = null;

@@ -158,7 +158,7 @@ var TSOS;
             //_CPU.currentProcess.update();
             //end the process
             _MemoryManager.freeSpace[_CPU.currentProcess.pid] = true;
-            _StdOut.putText("Process ID: " + _CPU.currentProcess.pid + " complete");
+            _StdOut.putText(" Process ID: " + _CPU.currentProcess.pid + " complete ");
             _CPU.stop();
             //_CPU.currentProcess.state = halted or terminated?
             //TODO context switching for project 3

@@ -7,7 +7,9 @@ var TSOS;
 (function (TSOS) {
     var ProcessManager = (function () {
         function ProcessManager() {
-            this.processes = [];
+            //list of all processes
+            this.residentList = [];
+            this.readyQueue = new TSOS.Queue();
             this.init();
         }
         ProcessManager.prototype.init = function () {
@@ -16,8 +18,8 @@ var TSOS;
 
         ProcessManager.prototype.load = function (process) {
             this.currentPid++;
-            this.processes[this.currentPid] = new TSOS.PCB();
-            this.processes[this.currentPid].pid = this.currentPid;
+            this.residentList[this.currentPid] = new TSOS.PCB();
+            this.residentList[this.currentPid].pid = this.currentPid;
             _MemoryManager.load(process, this.currentPid);
             return this.currentPid;
         };

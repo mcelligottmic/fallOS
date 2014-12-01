@@ -20,16 +20,16 @@ var TSOS;
             this.loadIndex = 0;
             this.lastLoad = 0;
             this.memory = new TSOS.mainMemory();
-            this.freeSpace[0] = true;
-            this.freeSpace[1] = true;
-            this.freeSpace[2] = true;
+            for (var i = 0; i < this.NUM_OF_BLOCKS; i++) {
+                this.freeSpace[i] = true;
+            }
         };
 
         MemoryManager.prototype.load = function (program, pid) {
             //determine which blocks are open
             //determine how many blocks of memory we need
             //update, as of now each program can only be of size 256
-            this.loadIndex = (pid % 3) * 256;
+            this.loadIndex = (pid % this.NUM_OF_BLOCKS) * 256;
 
             //clear the block we are going to use
             this.clear(this.loadIndex);
@@ -46,15 +46,16 @@ var TSOS;
             }
 
             //store info into PCB
-            _ProcessManager.processes[pid].base = this.loadIndex.toString(16);
-            _ProcessManager.processes[pid].limit = (this.loadIndex + this.BLOCKSIZE).toString(16);
-            _ProcessManager.processes[pid].xRegister = "00";
-            _ProcessManager.processes[pid].yRegister = "00";
-            _ProcessManager.processes[pid].zRegister = "00";
-            _ProcessManager.processes[pid].accumulator = "00";
-            _ProcessManager.processes[pid].PC = this.loadIndex.toString(16);
-            this.freeSpace[pid % 3] = false;
+            _ProcessManager.residentList[pid].base = this.loadIndex.toString(16);
+            _ProcessManager.residentList[pid].limit = (this.loadIndex + this.BLOCKSIZE).toString(16);
+            _ProcessManager.residentList[pid].xRegister = "00";
+            _ProcessManager.residentList[pid].yRegister = "00";
+            _ProcessManager.residentList[pid].zRegister = "00";
+            _ProcessManager.residentList[pid].accumulator = "00";
+            _ProcessManager.residentList[pid].PC = this.loadIndex.toString(16);
+            this.freeSpace[pid % this.NUM_OF_BLOCKS] = false;
 
+            //maybe let the user know memory is full?
             //update display
             _DisplayManager.updateRam();
         };

@@ -111,6 +111,12 @@ module TSOS {
                                 "<number> - runs the program having pid of <number>.");
           this.commandList[this.commandList.length] = sc;
 
+          // runAll <number>
+          sc = new ShellCommand(this.shellRunAll,
+                                "runall",
+                                "executes all the prgrams at once");
+          this.commandList[this.commandList.length] = sc;
+
 			    // status <string>
           sc = new ShellCommand(this.shellStatus,
                                 "status",
@@ -370,7 +376,7 @@ module TSOS {
 		//Error screen when Kernel traps an OS error
 		public shellBSOD(args) {
             //create an interrupt used 2 instead of standard debug exception due to it already being used
-			_Kernel.krnInterruptHandler(2, "test");
+			_Kernel.krnInterruptHandler(BSOD_IRQ, "test");
 		}
 
 		//validates the user code in the HTML5 text area
@@ -404,10 +410,34 @@ module TSOS {
 
     //runs the program that is loaded
     public shellRun(pid: number) {
-      //run the program
-      _CPU.start(_ProcessManager.processes[pid]);
-      _StdOut.putText("Process ID: " + _CPU.currentProcess.pid + " running");
+      if (_ProcessManager.residentList[pid] != null) {
+        //move process to ready queue and remove from resident list
+        _ProcessManager.readyQueue.enqueue(_ProcessManager.residentList[pid]);
+        _ProcessManager.residentList[pid] = null;
+        //run the program
+        _CPU.start(_ProcessManager.readyQueue.dequeue());
+        _StdOut.putText("Process ID: " + pid + " running");
+      } else if (_CPU.isExecuting) {
+        _StdOut.putText("Process ID: " + _CPU.currentProcess.pid + " is currently running");
+      } else {
+        _StdOut.putText("CPU running status: " + _CPU.isExecuting);
+      }
     }//end run
+
+    //runs all the programs that are loaded
+    public shellRunAll(args): void {
+      //move all programs to ready queue
+      _StdOut.putText("");
+      for (var i = 0; i < _ProcessManager.residentList.length; i++){
+        if (_ProcessManager.residentList[i] != null) {
+          //move process to ready queue and remove from resident list
+          _ProcessManager.readyQueue.enqueue(_ProcessManager.residentList[i]);
+          _ProcessManager.residentList[i] = null;
+        }//end if
+      }//end for
+      //run the first program
+      _CPU.start(_ProcessManager.readyQueue.dequeue());
+    }//end RunAll
 
 		public shellStatus(args) {
       if (args.length > 0) {

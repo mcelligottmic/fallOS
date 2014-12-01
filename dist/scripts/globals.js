@@ -21,6 +21,7 @@ var KEYBOARD_IRQ = 1;
 var INVAILD_MEMORY_ACCESS_IRQ = 2;
 var CPU_BREAK_IRQ = 3;
 var SYSTEM_CALL_IRQ = 4;
+var BSOD_IRQ = 255;
 
 var _MAXRAM = (256 * 3);
 
@@ -53,6 +54,7 @@ var _SystemCallLibrary;
 // Memory and Process control
 var _ProcessManager;
 var _MemoryManager;
+var _CPUScheduler;
 
 // Standard input and output
 var _StdIn = null;
