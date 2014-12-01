@@ -8,7 +8,7 @@ module TSOS {
 
     export class CPUScheduler {
       //properties
-      //public readyQueue = new Queue();
+      public readyQueue = new Queue();
 
       constructor() {
         this.init();

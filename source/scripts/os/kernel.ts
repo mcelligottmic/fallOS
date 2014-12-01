@@ -41,6 +41,7 @@ module TSOS {
             _ProcessManager = new ProcessManager();
             _MemoryManager = new MemoryManager();
             _DisplayManager = new DisplayManager();
+            _CPUScheduler = new CPUScheduler();
             // ... more?
             //
 

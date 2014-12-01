@@ -6,10 +6,10 @@ Manages different processes by creating PCBs
 var TSOS;
 (function (TSOS) {
     var ProcessManager = (function () {
+        //public readyQueue = new Queue();
         function ProcessManager() {
             //list of all processes
             this.residentList = [];
-            this.readyQueue = new TSOS.Queue();
             this.init();
         }
         ProcessManager.prototype.init = function () {

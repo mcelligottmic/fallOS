@@ -13,7 +13,7 @@ module TSOS {
     public currentPid: number;
     //list of all processes
     public residentList = [];
-    public readyQueue = new Queue();
+    //public readyQueue = new Queue();
 
     constructor() {
       this.init();

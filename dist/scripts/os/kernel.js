@@ -39,6 +39,7 @@ var TSOS;
             _ProcessManager = new TSOS.ProcessManager();
             _MemoryManager = new TSOS.MemoryManager();
             _DisplayManager = new TSOS.DisplayManager();
+            _CPUScheduler = new TSOS.CPUScheduler();
 
             // ... more?
             //

@@ -409,13 +409,14 @@ module TSOS {
     }//end Load
 
     //runs the program that is loaded
-    public shellRun(pid: number) {
+    public shellRun(args) {
+      var pid = parseInt(args[0]);
       if (_ProcessManager.residentList[pid] != null) {
         //move process to ready queue and remove from resident list
-        _ProcessManager.readyQueue.enqueue(_ProcessManager.residentList[pid]);
+        _CPUScheduler.readyQueue.enqueue(_ProcessManager.residentList[pid]);
         _ProcessManager.residentList[pid] = null;
         //run the program
-        _CPU.start(_ProcessManager.readyQueue.dequeue());
+        _CPU.start(_CPUScheduler.readyQueue.dequeue());
         _StdOut.putText("Process ID: " + pid + " running");
       } else if (_CPU.isExecuting) {
         _StdOut.putText("Process ID: " + _CPU.currentProcess.pid + " is currently running");
@@ -431,12 +432,12 @@ module TSOS {
       for (var i = 0; i < _ProcessManager.residentList.length; i++){
         if (_ProcessManager.residentList[i] != null) {
           //move process to ready queue and remove from resident list
-          _ProcessManager.readyQueue.enqueue(_ProcessManager.residentList[i]);
+          _CPUScheduler.readyQueue.enqueue(_ProcessManager.residentList[i]);
           _ProcessManager.residentList[i] = null;
         }//end if
       }//end for
       //run the first program
-      _CPU.start(_ProcessManager.readyQueue.dequeue());
+      _CPU.start(_CPUScheduler.readyQueue.dequeue());
     }//end RunAll
 
 		public shellStatus(args) {
