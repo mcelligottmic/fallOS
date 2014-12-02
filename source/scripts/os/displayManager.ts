@@ -73,35 +73,37 @@ module TSOS {
       var table = $("#PCB");
       //clear all rows at once
       $("#PCB").empty();
-      var colums = "<td>" + "PC" + "</td>" +
+      var colums = "<td>" + "PID" + "</td>" +
+                  "<td>" + "PC" + "</td>" +
                   "<td>" + "Acc" + "</td>" +
                   "<td>" + "Xreg" + "</td>" +
                   "<td>" + "Yreg" + "</td>" +
                   "<td>" + "Zflag" + "</td>" +
-                  "<td>" + "PID" + "</td>" +
                   "<td>" + "Base" + "</td>" +
-                  "<td>" + "Limit" + "</td>";
+                  "<td>" + "Limit" + "</td>" +
                   //"<td>" + "Priority" + "</td>" +
-                  //"<td>" + "State" + "</td>" ;
+                  "<td>" + "State" + "</td>" ;
       //add colums to row
       var row = "<tr>" + colums + "</tr>";
       //add row to table
       table.append(row);
       //create colums
-      colums = "<td>" + _CPU.PC + "</td>" +
+      //loop through the ready queue
+      colums = "<td>" + _CPU.currentProcess.pid + "</td>" +
+                "<td>" + _CPU.PC + "</td>" +
                 "<td>" + _CPU.Acc + "</td>" +
                 "<td>" + _CPU.Xreg + "</td>" +
                 "<td>" + _CPU.Yreg + "</td>" +
                 "<td>" + _CPU.Zflag + "</td>" +
-                "<td>" + _CPU.currentProcess.pid + "</td>" +
                 "<td>" + _CPU.currentProcess.base + "</td>" +
-                "<td>" + _CPU.currentProcess.limit + "</td>";
+                "<td>" + _CPU.currentProcess.limit + "</td>" +
                 //"<td>" + _CPU.currentProcess.priority + "</td>" +
-                //"<td>" + _CPU.currentProcess.state + "</td>" ;
+                "<td>" + _CPU.currentProcess.state + "</td>" ;
       //add colums to row
       row = "<tr>" + colums + "</tr>";
       //add row to table
       table.append(row);
+      //end loop
     }
 
   }//end class

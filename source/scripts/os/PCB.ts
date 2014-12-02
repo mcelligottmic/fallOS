@@ -25,8 +25,8 @@ module TSOS {
     public accumulator;
     public PC;
     public priority;
-    //maybe add in the current State of the process
-    //public State; //"new","ready","running","waiting", or "halted"
+    //the current State of the process
+    public state;
 
     constructor() {
       this.base = "00";
@@ -36,6 +36,7 @@ module TSOS {
       this.zRegister = "00";
       this.accumulator = "00";
       this.PC = "00";
+      this.state = this.State.NEW;
     }
 
     public init(): void {
@@ -58,6 +59,15 @@ module TSOS {
       //get the current state
       //this.isExecuting = true;
     }
+
+    // Enum that contains all possible states of a process
+    public State = {
+      NEW: 0,
+      RUNNING: 1,
+      WAITING: 2,
+      READY: 3,
+      TERMINATED: 4
+    };
 
   }//end class
 

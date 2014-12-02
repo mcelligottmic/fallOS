@@ -11,9 +11,15 @@ TypeScript/JavaScript in both the host and client environments.
 var TSOS;
 (function (TSOS) {
     var PCB = (function () {
-        //maybe add in the current State of the process
-        //public State; //"new","ready","running","waiting", or "halted"
         function PCB() {
+            // Enum that contains all possible states of a process
+            this.State = {
+                NEW: 0,
+                RUNNING: 1,
+                WAITING: 2,
+                READY: 3,
+                TERMINATED: 4
+            };
             this.base = "00";
             this.limit = "00";
             this.xRegister = "00";
@@ -21,6 +27,7 @@ var TSOS;
             this.zRegister = "00";
             this.accumulator = "00";
             this.PC = "00";
+            this.state = this.State.NEW;
         }
         PCB.prototype.init = function () {
             this.pid = "00";

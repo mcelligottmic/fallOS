@@ -21,6 +21,7 @@ var TSOS;
             this.residentList[this.currentPid] = new TSOS.PCB();
             this.residentList[this.currentPid].pid = this.currentPid;
             _MemoryManager.load(process, this.currentPid);
+            this.residentList[this.currentPid].state = this.residentList[this.currentPid].State.READY;
             return this.currentPid;
         };
         return ProcessManager;
