@@ -97,10 +97,10 @@ module TSOS {
         public start(pcb: PCB): void {
           this.currentProcess = pcb;
           this.PC = pcb.PC,
-          this.Acc = pcb.accumulator,
-          this.Xreg = pcb.xRegister,
-          this.Yreg = pcb.yRegister,
-          this.Zflag = pcb.zRegister,
+          this.Acc = pcb.Acc,
+          this.Xreg = pcb.Xreg,
+          this.Yreg = pcb.Yreg,
+          this.Zflag = pcb.Zflag,
           this.isExecuting = true;
         }
 

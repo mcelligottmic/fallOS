@@ -6,8 +6,10 @@ Manages different processes by creating PCBs
 var TSOS;
 (function (TSOS) {
     var ProcessManager = (function () {
+        //public readyQueue = new Queue();
         function ProcessManager() {
-            this.processes = [];
+            //list of all processes
+            this.residentList = [];
             this.init();
         }
         ProcessManager.prototype.init = function () {
@@ -16,9 +18,10 @@ var TSOS;
 
         ProcessManager.prototype.load = function (process) {
             this.currentPid++;
-            this.processes[this.currentPid] = new TSOS.PCB();
-            this.processes[this.currentPid].pid = this.currentPid;
+            this.residentList[this.currentPid] = new TSOS.PCB();
+            this.residentList[this.currentPid].pid = this.currentPid;
             _MemoryManager.load(process, this.currentPid);
+            this.residentList[this.currentPid].state = this.residentList[this.currentPid].State.READY;
             return this.currentPid;
         };
         return ProcessManager;

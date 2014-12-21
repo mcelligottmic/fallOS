@@ -111,6 +111,12 @@ module TSOS {
                                 "<number> - runs the program having pid of <number>.");
           this.commandList[this.commandList.length] = sc;
 
+          // runAll <number>
+          sc = new ShellCommand(this.shellRunAll,
+                                "runall",
+                                "executes all the prgrams at once");
+          this.commandList[this.commandList.length] = sc;
+
 			    // status <string>
           sc = new ShellCommand(this.shellStatus,
                                 "status",
@@ -118,9 +124,15 @@ module TSOS {
           this.commandList[this.commandList.length] = sc;
 
           // clearmem
-          sc = new ShellCommand(this.shellRun,
+          sc = new ShellCommand(this.shellClearMem,
                                 "clearmem",
                                 "- clears all memory partitions.");
+          this.commandList[this.commandList.length] = sc;
+
+          // quantum <number>
+          sc = new ShellCommand(this.shellQuantum,
+                                "quantum",
+                                "<number> - sets the Round Robin quantum <number>.");
           this.commandList[this.commandList.length] = sc;
 
           // processes - list the running processes and their IDs
@@ -174,7 +186,7 @@ module TSOS {
                     this.execute(this.shellInvalidCommand);
                 }
             }
-        }
+        }//end handleInput
 
         // args is an option parameter, ergo the ? which allows TypeScript to understand that
         public execute(fn, args?) {
@@ -328,103 +340,136 @@ module TSOS {
             }
         }
 
-		public shellDate(args) {
-			var d = new Date();
-            _StdOut.putText("Today's date is " + (d.getMonth() + 1)+ "/" + d.getDate() + "/" + d.getFullYear() +
-				" and the time is " + d.getHours() + ":" + d.getMinutes() );
+		    public shellDate(args) {
+			       var d = new Date();
+            _StdOut.putText("Today's date is " + (d.getMonth() + 1)+ "/" +
+                d.getDate() + "/" + d.getFullYear() +
+				        " and the time is " + d.getHours() + ":" + d.getMinutes() );
         }
 
-		//tells you where you are...like you didn't know
-		public shellWhereAmI(args) {
+		    //tells you where you are...like you didn't know
+		    public shellWhereAmI(args) {
             _StdOut.putText("Your at a computer...");
         }
 
-		//randomly picks rules from an array base on the time
-		public shellRules(args) {
-			var list:string[] = ["#1 Cardio","#2 Double Tap","#3 Beware of Bathrooms","#4 Wear Seat Belts","#5 No Attachments",
+		    //randomly picks rules from an array base on the time
+		    public shellRules(args) {
+			      var list:string[] = ["#1 Cardio","#2 Double Tap","#3 Beware of Bathrooms","#4 Wear Seat Belts","#5 No Attachments",
 								"#18 Limber up","#22 When in doubt Know your way out","#31 Check the back seat",
 								"#32Enjoy the little things"];
             var date = new Date();
-			var time = (date.getMilliseconds());
-			if (time < 100) {
+			      var time = (date.getMilliseconds());
+			      if (time < 100) {
                 _StdOut.putText(list[0]);
-			} else if (time < 200) {
-				_StdOut.putText(list[1]);
-			} else if (time < 300) {
-				_StdOut.putText(list[2]);
-			} else if (time < 400) {
-				_StdOut.putText(list[3]);
-			} else if (time < 500) {
-				_StdOut.putText(list[4]);
-			} else if (time < 600) {
-				_StdOut.putText(list[5]);
-			} else if (time < 700) {
-				_StdOut.putText(list[6]);
-			} else if (time < 800) {
-				_StdOut.putText(list[7]);
-			} else {
-				_StdOut.putText(list[8]);
-			}
+			      } else if (time < 200) {
+				          _StdOut.putText(list[1]);
+			      } else if (time < 300) {
+				          _StdOut.putText(list[2]);
+			      } else if (time < 400) {
+				          _StdOut.putText(list[3]);
+			      } else if (time < 500) {
+				          _StdOut.putText(list[4]);
+			      } else if (time < 600) {
+				          _StdOut.putText(list[5]);
+			      } else if (time < 700) {
+				          _StdOut.putText(list[6]);
+			      } else if (time < 800) {
+				          _StdOut.putText(list[7]);
+			      } else {
+				          _StdOut.putText(list[8]);
+			      }
         }
 
-		//Error screen when Kernel traps an OS error
-		public shellBSOD(args) {
+		    //Error screen when Kernel traps an OS error
+		    public shellBSOD(args) {
             //create an interrupt used 2 instead of standard debug exception due to it already being used
-			_Kernel.krnInterruptHandler(2, "test");
-		}
+			         _Kernel.krnInterruptHandler(BSOD_IRQ, "test");
+		    }
 
-		//validates the user code in the HTML5 text area
-		public shellLoad(args) {
-      //load the text
-			var temp = <HTMLTextAreaElement>document.getElementById('taProgramInput');
-			var program : string = temp.value;
-			program = program.replace(/\s+/g, '');
+		    //validates the user code in the HTML5 text area
+		    public shellLoad(args) {
+          //load the text
+			    var temp = <HTMLTextAreaElement>document.getElementById('taProgramInput');
+			    var program : string = temp.value;
+			    program = program.replace(/\s+/g, '');
 
-      var valid = true;
-      // \d matches to a digit
-      var re = /[A-Fa-f0-9][A-Fa-f0-9]/;
-      //if the program is odd it is invalid and we don't need to check
-      if (program.length % 2 == 0) {
-        for (var i = 0; i < program.length; i += 2) {
-          if (!re.test(program)) {
+          var valid = true;
+          // \d matches to a digit
+          var re = /[A-Fa-f0-9][A-Fa-f0-9]/;
+          //if the program is odd it is invalid and we don't need to check
+          if (program.length % 2 == 0) {
+              for (var i = 0; i < program.length; i += 2) {
+                if (!re.test(program)) {
+                  valid = false;
+                }
+              }
+          } else {
             valid = false;
           }
+          if (!valid) {
+            _StdOut.putText("invalid...do you need some help?");
+          } else {
+            //store program into main memory starting at location $0000
+            var pid = _ProcessManager.load(program);
+				    _StdOut.putText("Process ID: " + pid + "");
+			    }
+        }//end Load
+
+        //runs the program that is loaded
+        public shellRun(args) {
+          var pid = parseInt(args[0]);
+          if (_ProcessManager.residentList[pid] != null) {
+            //move process to ready queue and remove from resident list
+            _CPUScheduler.readyQueue.enqueue(_ProcessManager.residentList[pid]);
+            _ProcessManager.residentList[pid] = null;
+            //run the program
+            _CPU.start(_CPUScheduler.readyQueue.dequeue());
+            _StdOut.putText("Process ID: " + pid + " running");
+          } else if (_CPU.isExecuting) {
+            _StdOut.putText("Process ID: " + _CPU.currentProcess.pid + " is currently running");
+          } else {
+            _StdOut.putText("CPU running status: " + _CPU.isExecuting);
+          }
+        }//end run
+
+        //runs all the programs that are loaded
+        public shellRunAll(args): void {
+          //move all programs to ready queue
+          _StdOut.putText("");
+          for (var i = 0; i < _ProcessManager.residentList.length; i++){
+            if (_ProcessManager.residentList[i] != null) {
+              //move process to ready queue and remove from resident list
+              _CPUScheduler.readyQueue.enqueue(_ProcessManager.residentList[i]);
+              _ProcessManager.residentList[i] = null;
+            }//end if
+          }//end for
+          //run the first program
+          _CPU.start(_CPUScheduler.readyQueue.dequeue());
+        }//end RunAll
+
+		    public shellStatus(args) {
+          if (args.length > 0) {
+            var newString: string = "";
+				    for(var i = 0; i < args.length; i++){
+					    newString = newString + args[i] + " ";
+            }
+            document.getElementById('statusBox').innerHTML = newString;
+          } else {
+            document.getElementById('statusBox').innerHTML = "Usage: status <string>  Please supply a string.";
+          }
+        }//end shellStatus
+
+        //set all blocks of main memory to "00"
+        public shellClearMem(args) {
+          _MemoryManager.clearMem();
+          _StdOut.putText("Memory has been cleared...");
+        }//end shellClearMem
+
+        //sets the clock ticks for round robin
+        public shellQuantum(args) {
+          _CPUScheduler.quantum = parseInt(args[0]);
         }
-      } else {
-          valid = false;
-        }
-        if (!valid) {
-          _StdOut.putText("invalid...do you need some help?");
-        } else {
-          //store program into main memory starting at location $0000
-          var pid = _ProcessManager.load(program);
-				  _StdOut.putText("Process ID: " + pid + "");
-			  }
-    }//end Load
 
-    //runs the program that is loaded
-    public shellRun(pid: number) {
-      //run the program
-      _CPU.start(_ProcessManager.processes[pid]);
-      _StdOut.putText("Process ID: " + _CPU.currentProcess.pid + " running");
-    }//end run
+      }//end class
 
-		public shellStatus(args) {
-      if (args.length > 0) {
-				var newString: string = "";
-				for(var i = 0; i < args.length; i++){
-					newString = newString + args[i] + " ";
-				}
-                document.getElementById('statusBox').innerHTML = newString;
-      } else {
-          document.getElementById('statusBox').innerHTML = "Usage: status <string>  Please supply a string.";
-        }
-    }//end shellStatus
-
-    //set all blocks of main memory to "00"
-    public shellClearMem(args) {
-      _MemoryManager.memory.init();
-    }//end shellClearMem
-
-    }
-}
+}//end module

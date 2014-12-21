@@ -18,10 +18,10 @@ module TSOS {
     //properties
     //main memory will be stored in bytes
     public RAM = [];
-    public max = 256;
+    public max = _MAXRAM;
 
-    constructor( num : number) {
-      this.max = num;
+    constructor() {
+      this.init();
     }
 
     //fills main memory with 00 at each location

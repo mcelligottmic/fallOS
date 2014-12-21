@@ -39,6 +39,7 @@ var TSOS;
             _ProcessManager = new TSOS.ProcessManager();
             _MemoryManager = new TSOS.MemoryManager();
             _DisplayManager = new TSOS.DisplayManager();
+            _CPUScheduler = new TSOS.CPUScheduler();
 
             // ... more?
             //
@@ -84,11 +85,14 @@ var TSOS;
                 var interrupt = _KernelInterruptQueue.dequeue();
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
             } else if (_CPU.isExecuting) {
+                // If there are no interrupts then run one CPU cycle if there is anything being processed.
                 _CPU.cycle();
 
                 //displays cpu, memory, and PCB
                 _DisplayManager.updateAll();
+                _CPUScheduler.cycle++;
             } else {
+                // If there are no interrupts and there is nothing being executed then just be idle.
                 this.krnTrace("Idle");
             }
         };
@@ -158,7 +162,7 @@ var TSOS;
             //_CPU.currentProcess.update();
             //end the process
             _MemoryManager.freeSpace[_CPU.currentProcess.pid] = true;
-            _StdOut.putText("Process ID: " + _CPU.currentProcess.pid + " complete");
+            _StdOut.putText(" Process ID: " + _CPU.currentProcess.pid + " complete ");
             _CPU.stop();
             //_CPU.currentProcess.state = halted or terminated?
             //TODO context switching for project 3

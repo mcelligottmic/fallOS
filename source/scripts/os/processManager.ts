@@ -11,7 +11,9 @@ module TSOS {
   export class ProcessManager {
     //properties
     public currentPid: number;
-    public processes = [];
+    //list of all processes
+    public residentList = [];
+    //public readyQueue = new Queue();
 
     constructor() {
       this.init();
@@ -23,9 +25,11 @@ module TSOS {
 
     public load(process: string): number {
       this.currentPid++;
-      this.processes[this.currentPid] = new PCB();
-      this.processes[this.currentPid].pid = this.currentPid;
+      this.residentList[this.currentPid] = new PCB();
+      this.residentList[this.currentPid].pid = this.currentPid;
       _MemoryManager.load(process, this.currentPid);
+      this.residentList[this.currentPid].state =
+                                this.residentList[this.currentPid].State.READY;
       return this.currentPid;
     }
 

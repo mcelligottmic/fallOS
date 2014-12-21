@@ -77,12 +77,20 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellRun, "run", "<number> - runs the program having pid of <number>.");
             this.commandList[this.commandList.length] = sc;
 
+            // runAll <number>
+            sc = new TSOS.ShellCommand(this.shellRunAll, "runall", "executes all the prgrams at once");
+            this.commandList[this.commandList.length] = sc;
+
             // status <string>
             sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Displays <string> under the status bar.");
             this.commandList[this.commandList.length] = sc;
 
             // clearmem
-            sc = new TSOS.ShellCommand(this.shellRun, "clearmem", "- clears all memory partitions.");
+            sc = new TSOS.ShellCommand(this.shellClearMem, "clearmem", "- clears all memory partitions.");
+            this.commandList[this.commandList.length] = sc;
+
+            // quantum <number>
+            sc = new TSOS.ShellCommand(this.shellQuantum, "quantum", "<number> - sets the Round Robin quantum <number>.");
             this.commandList[this.commandList.length] = sc;
 
             // processes - list the running processes and their IDs
@@ -338,7 +346,7 @@ var TSOS;
         //Error screen when Kernel traps an OS error
         Shell.prototype.shellBSOD = function (args) {
             //create an interrupt used 2 instead of standard debug exception due to it already being used
-            _Kernel.krnInterruptHandler(2, "test");
+            _Kernel.krnInterruptHandler(BSOD_IRQ, "test");
         };
 
         //validates the user code in the HTML5 text area
@@ -373,10 +381,37 @@ var TSOS;
         };
 
         //runs the program that is loaded
-        Shell.prototype.shellRun = function (pid) {
-            //run the program
-            _CPU.start(_ProcessManager.processes[pid]);
-            _StdOut.putText("Process ID: " + _CPU.currentProcess.pid + " running");
+        Shell.prototype.shellRun = function (args) {
+            var pid = parseInt(args[0]);
+            if (_ProcessManager.residentList[pid] != null) {
+                //move process to ready queue and remove from resident list
+                _CPUScheduler.readyQueue.enqueue(_ProcessManager.residentList[pid]);
+                _ProcessManager.residentList[pid] = null;
+
+                //run the program
+                _CPU.start(_CPUScheduler.readyQueue.dequeue());
+                _StdOut.putText("Process ID: " + pid + " running");
+            } else if (_CPU.isExecuting) {
+                _StdOut.putText("Process ID: " + _CPU.currentProcess.pid + " is currently running");
+            } else {
+                _StdOut.putText("CPU running status: " + _CPU.isExecuting);
+            }
+        };
+
+        //runs all the programs that are loaded
+        Shell.prototype.shellRunAll = function (args) {
+            //move all programs to ready queue
+            _StdOut.putText("");
+            for (var i = 0; i < _ProcessManager.residentList.length; i++) {
+                if (_ProcessManager.residentList[i] != null) {
+                    //move process to ready queue and remove from resident list
+                    _CPUScheduler.readyQueue.enqueue(_ProcessManager.residentList[i]);
+                    _ProcessManager.residentList[i] = null;
+                }
+            }
+
+            //run the first program
+            _CPU.start(_CPUScheduler.readyQueue.dequeue());
         };
 
         Shell.prototype.shellStatus = function (args) {
@@ -393,7 +428,13 @@ var TSOS;
 
         //set all blocks of main memory to "00"
         Shell.prototype.shellClearMem = function (args) {
-            _MemoryManager.memory.init();
+            _MemoryManager.clearMem();
+            _StdOut.putText("Memory has been cleared...");
+        };
+
+        //sets the clock ticks for round robin
+        Shell.prototype.shellQuantum = function (args) {
+            _CPUScheduler.quantum = parseInt(args[0]);
         };
         return Shell;
     })();
