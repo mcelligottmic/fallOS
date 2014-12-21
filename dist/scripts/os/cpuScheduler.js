@@ -19,6 +19,7 @@ var TSOS;
         CPUScheduler.prototype.init = function () {
             this.scheduling = this.Algorithm.RR;
             this.quantum = 6;
+            this.cycle = 0;
         };
         return CPUScheduler;
     })();

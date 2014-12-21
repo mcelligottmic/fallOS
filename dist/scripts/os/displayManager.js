@@ -78,15 +78,34 @@ var TSOS;
             table.append(row);
 
             //create colums
-            //loop through the ready queue
-            colums = "<td>" + _CPU.currentProcess.pid + "</td>" + "<td>" + _CPU.PC + "</td>" + "<td>" + _CPU.Acc + "</td>" + "<td>" + _CPU.Xreg + "</td>" + "<td>" + _CPU.Yreg + "</td>" + "<td>" + _CPU.Zflag + "</td>" + "<td>" + _CPU.currentProcess.base + "</td>" + "<td>" + _CPU.currentProcess.limit + "</td>" + "<td>" + _CPU.currentProcess.state + "</td>";
+            colums = "<td>" + _CPU.currentProcess.pid + "</td>" + "<td>" + _CPU.currentProcess.PC + "</td>" + "<td>" + _CPU.currentProcess.Acc + "</td>" + "<td>" + _CPU.currentProcess.Xreg + "</td>" + "<td>" + _CPU.currentProcess.Yreg + "</td>" + "<td>" + _CPU.currentProcess.Zflag + "</td>" + "<td>" + _CPU.currentProcess.base + "</td>" + "<td>" + _CPU.currentProcess.limit + "</td>" + "<td>" + _CPU.currentProcess.state + "</td>";
 
             //add colums to row
             row = "<tr>" + colums + "</tr>";
 
             //add row to table
             table.append(row);
-            //end loop
+            /*
+            //loop through the ready queue if there is anything
+            if (_CPUScheduler.readyQueue.getSize() != 0) {
+            for (var i = 0; i < _CPUScheduler.readyQueue.getSize(); i++) {
+            colums = "<td>" + _CPUScheduler.readyQueue[i].pid + "</td>" +
+            "<td>" + _CPUScheduler.readyQueue[i].PC + "</td>" +
+            "<td>" + _CPUScheduler.readyQueue[i].Acc + "</td>" +
+            "<td>" + _CPUScheduler.readyQueue[i].Xreg + "</td>" +
+            "<td>" + _CPUScheduler.readyQueue[i].Yreg + "</td>" +
+            "<td>" + _CPUScheduler.readyQueue[i].Zflag + "</td>" +
+            "<td>" + _CPUScheduler.readyQueue[i].base + "</td>" +
+            "<td>" + _CPUScheduler.readyQueue[i].limit + "</td>" +
+            //"<td>" + _CPU.currentProcess.priority + "</td>" +
+            "<td>" + _CPUScheduler.readyQueue[i].state + "</td>" ;
+            //add colums to row
+            row = "<tr>" + colums + "</tr>";
+            //add row to table
+            table.append(row);
+            }//end loop
+            }//end if
+            */
         };
         return DisplayManager;
     })();

@@ -89,6 +89,10 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellClearMem, "clearmem", "- clears all memory partitions.");
             this.commandList[this.commandList.length] = sc;
 
+            // quantum <number>
+            sc = new TSOS.ShellCommand(this.shellQuantum, "quantum", "<number> - sets the Round Robin quantum <number>.");
+            this.commandList[this.commandList.length] = sc;
+
             // processes - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -426,6 +430,11 @@ var TSOS;
         Shell.prototype.shellClearMem = function (args) {
             _MemoryManager.clearMem();
             _StdOut.putText("Memory has been cleared...");
+        };
+
+        //sets the clock ticks for round robin
+        Shell.prototype.shellQuantum = function (args) {
+            _CPUScheduler.quantum = parseInt(args[0]);
         };
         return Shell;
     })();

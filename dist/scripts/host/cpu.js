@@ -92,7 +92,7 @@ var TSOS;
         //CPU starts working on a process
         Cpu.prototype.start = function (pcb) {
             this.currentProcess = pcb;
-            this.PC = pcb.PC, this.Acc = pcb.accumulator, this.Xreg = pcb.xRegister, this.Yreg = pcb.yRegister, this.Zflag = pcb.zRegister, this.isExecuting = true;
+            this.PC = pcb.PC, this.Acc = pcb.Acc, this.Xreg = pcb.Xreg, this.Yreg = pcb.Yreg, this.Zflag = pcb.Zflag, this.isExecuting = true;
         };
 
         //CPU stops working on a process
